@@ -49,7 +49,6 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 
   m_currentAlgorithm = NONE;
   m_timeTaken = 0;
-
 }
 
 void PathFinder::Render(){
@@ -92,6 +91,14 @@ bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
 
 std::string PathFinder::GetNameOfCurrentSearchAlgorithm() const {
 
+  switch(m_currentAlgorithm){
+  case NONE: return " ";
+  case ASTAR: return "A Star";
+  case BFS: return "Breadth First";
+  case DFS: return "Depth First";
+  case DIJKSTRA: return "Dijkstra";
+  default: return "UNKNOWN!";
+  }
 }
 
 void PathFinder::Save( char *filename ){
