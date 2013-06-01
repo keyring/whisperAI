@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "PathFinder.h"
+#include "PrecisionTimer.h"
 
 using namespace std;
 

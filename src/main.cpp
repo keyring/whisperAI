@@ -10,18 +10,12 @@
 #include <windows.h>
 #include <time.h>
 
+#include "Constants.h"
+
 /*    Globals    */
 const char *g_applicationName = "Path Finder";
 const char *g_windowClassName = "MyClass";
 PathFinder *g_pathFinder;
-
-/*    Constant    */
-const int WINDOWWIDTH = 600;
-const int WINDOWHEIGTH = 600;
-const int CLIENTWIDTH = 500;
-const int CLIENTHEIGHT = 500;
-const int NUMCELLSX = 19;
-const int NUMCELLSY = 19;
 
 void RedrawDisplay( HWND hwnd ){
 
