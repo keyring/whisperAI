@@ -147,8 +147,29 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
     case IDM_VIEW_GRAPH:
       if(GetMenuState(GetMenu(hwnd), IDM_VIEW_GRAPH, MFS_CHECKED) && MF_CHECKED){
-
+	ChangeMenuState( hwnd, IDM_VIEW_GRAPH, MFS_UNCHEKED );
+	g_pathFinder->SwitchGraphOff();
       }
+      else{
+	ChangeMenuState( hwnd, IDM_VIEW_GRAPH, MFS_CHECKED );
+	g_pathFinder->SwitchGraphOn();
+      }
+      break;
+    case IDM_VIEW_TILES:
+      if(GetMenuState(GetMenu(hwnd), IDM_VIEW_TILES, MFS_CHECKED) && MF_CHECKED){
+	ChangeMenuState( hwnd, IDM_VIEW_TILES, MFS_UNCHECKED );
+	g_pathFinder->SwitchTilesOff();
+      }
+      else{
+	ChangeMenuState( hwnd, IDM_VIEW_TILES, MFS_CHECKED );
+	g_pathFinder->SwitchTilesOn();
+      }
+      break;
+    } // switch
+
+    // RedrawWindowRect( hwnd, false, rectClientWindow );
+  }
+  
 
 
   case WM_PAINT:{
@@ -157,7 +178,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     BitBlt( hdcBackBuffer, 0, 0, cxClient, cyClient, NULL, NULL, NULL, WHITENESS );
 
     // start draw...
-    // render...
+    g_pathFinder->Render();
     // stop draw...
 
     BitBlt( ps.hdc, 0, 0, cxClient, cyClient, hdcBackBuffer, 0, 0, SRCCOPY );
@@ -242,7 +263,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
     MessageBox( NULL, "CreateWindow Failed!", "ERROR", 0 );
   }
 
-  // Create the graph...
+  g_pathFinder->CreateGraph( NUMCELLSX, NUMCELLSY );
 
 
   MSG msg;
@@ -251,7 +272,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
     DispatchMessage(&msg);
   }
 
-  // delete the graph...
+  delete g_pathFinder;
 
   UnregisterClass( g_windowClassName, wc.hInstance );
 
