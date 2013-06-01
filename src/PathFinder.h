@@ -50,6 +50,7 @@ public :
   bool m_start;
   bool m_finish;
 
+  bool m_showGraph;
   bool m_showTiles;
 
   double m_timeTaken;
@@ -74,5 +75,26 @@ public:
   void CreatePathAStar();
   void MinSpanningTree();
   
+  void ToggleShowGraph(){ m_showGraph = !m_showGraph; }
+  void SwitchGraphOn(){ m_showGraph = true; }
+  void SwitchGraphOff(){ m_showGraph = false; }
+  bool IsShowGraphOn() const { return m_showGraph; }
+
+  void ToggleShowTiles(){ m_showTiles = !m_showTiles; }
+  void SwitchTilesOn(){ m_showTiles = true; }
+  void SwitchTilesOff(){ m_showTiles = false; }
+  bool IsShowTilesOn() const { return m_showTiles; }
+
+  void ChangeBrush( const BRUSH_TYPE value ){ m_currentTerrainBrush = value; }
+  void ChangeSource( const int value ){ m_sourceCell = value; }
+  void ChnageTarget( const int value ){ m_targetCell = value; }
+
+  bool PointToIndex( POINTS p, int &NodeIndex );
+
+  double GetTerrainCost( BRUSH_TYPE brush );
+
+  void Save( char *filename );
+  void Load( char *filename );
+};
 
 #endif	/* __PATHFINDER_H__ */
