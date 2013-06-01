@@ -57,6 +57,28 @@ void PathFinder::Render(){
 
 void PathFinder::PaintTerrain( POINTS p ){
 
+  int x = (int)((double)(p.x)/m_cellWidth);
+  int y = (int)((double)(p.y)/m_cellHeight);
+
+  if( (x>m_numCellX) || (y>m_numCellY) ) return;
+
+  m_subTree.clear();
+  m_path.clear();
+
+  if( (m_currentTerrainBrush == SOURCE) || (m_currentTerrainBrush == TARGET) ){
+    switch(m_currentTerrainBrush){
+    case SOURCE:
+      m_sourceCell = y * m_numCellX + x;    break;
+    case TARGET:
+      m_targetCell = y * m_numCellX + x;    break;
+    }
+  }
+
+  else{
+    UpdateGraphFromBrush(m_currentTerrainBrush, y * m_numCellX + x);
+  }
+
+  UpdateAlgorithm();
 }
 
 double PathFinder::GetTerrainCost( const BRUSH_TYPE brush ){
