@@ -83,11 +83,27 @@ void PathFinder::PaintTerrain( POINTS p ){
 
 double PathFinder::GetTerrainCost( const BRUSH_TYPE brush ){
 
+  
 }
 
 
 void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
 
+  m_terrainType[cellIndex] = brush;
+
+  if(brush = 1)
+    m_graph->RemoveNode(cellIndex);
+  else{
+    if(!m_graph->IsNodePresent(cellIndex)){
+      int y = cellIndex / m_numCellY;
+      int x = cellIndex - (y * m_numCellY);
+
+      m_graph->AddNode(NavGraph::NodeType(cellIndex, Vector2D(x*m_cellWidth + m_cellWidth/2.0, y*m_cellHeight + m_cellHeight/2.0)));
+      GraphHelper_AddAllNeighboursToGridNode( * m_graph, y, x, m_numCellX, m_numCellY );
+    }
+
+    WeightNavGraphNodeEdges( *m_graph, cellIndex, GetTerrainCost((BRUSH_TYPE)brush) );
+  }
 }
 
 void PathFinder::UpdateAlgorithm(){
