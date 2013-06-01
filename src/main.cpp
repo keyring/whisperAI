@@ -31,6 +31,87 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 			     WPARAM wParam,
 			     LPARAM lParam ){
 
+  static int cxClient, cyClient;
+
+  static HDC hdcBackBuffer;
+  static HBITMAP hBitmap = NULL;
+  static HBITMAP hOldBitmap = NULL;
+
+  static TCHAR filename[MAX_PATH], titlename[MAX_PATH];
+  static RECT rectClientWindow;
+  static int CurrentSearchButton = 0;
+
+  switch(msg){
+
+  case WM_CREATE:{
+    srand((unsigned) time(NULL));
+    hdcBackBuffer = CreateCompatibleDC(NULL);
+    HDC hdc = GetDC(hwnd);
+
+    hBitmap = CreateCompatibleBitmap( hdc,
+				      cxClient,
+				      cyClient);
+
+    hOldBitmap = (HBITMAP)SelectObject( hdcBackBuffer, hBitmap );
+
+    Release(hwnd, hdc);
+  }
+    break;
+
+  case WM_PAINT:{
+    PAINTSTRUCT ps;
+    BeginPaint(hwnd, &ps);
+    BitBlt( hdcBackBuffer,
+	    0,
+	    0,
+	    cxClient,
+	    cyClient,
+	    NULL,
+	    NULL,
+	    NULL,
+	    WHITENESS );
+
+    // start draw...
+    // render...
+    // stop draw...
+
+    BitBlt( ps.hdc, 0, 0, cxClient, cyClient, hdcBackBuffer, 0, 0, SRCCOPY );
+
+    EndPaint(hwnd, &ps);
+  }
+    break;
+
+  case WM_SIZE:{
+    cxClient = LOWORD(lParam);
+    cyClient = HIWORD(lParam);
+
+    SelectObject(hdcBackBuffer, hOldBitmap);
+
+    DeleteObject(hBitmap);
+
+    HDC hdc = GetDC(hwnd);
+
+    hBitmap = CreateCompatibleBitmap( hdc,
+				      rectClientWindow.right,
+				      rectClientWindow.bottom );
+
+    Release(hwnd, hdc);
+    SelectObject(hdcBackBuffer, hBitmap);
+  }
+    break;
+
+  case WM_DISTROY:{
+    SelectObject(hdcBackBuffer, hOldBitmap);
+    DeleteDC(hdcBackBuffer);
+    DeleteObject(hBitmap);
+    DeleteObject(hOldBitmap);
+
+    PostQuitMessage(0);
+  }
+    break;
+  } // end switch
+
+  return DefWindowProc( hwnd, msg, wParam, lParam );		      
 }
 
 int WINAPI WinMain( HINSTANCE hInstance,
