@@ -24,6 +24,8 @@ const int NUMCELLSY = 19;
 
 void RedrawDisplay( HWND hwnd ){
 
+  InvaliddateRect(hwnd, NULL, TRUE);
+  UpdateWindow(hwnd);
 }
 
 LRESULT CALLBACK WindowProc( HWND hwnd,
@@ -54,22 +56,14 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
     hOldBitmap = (HBITMAP)SelectObject( hdcBackBuffer, hBitmap );
 
-    Release(hwnd, hdc);
+    ReleaseDC(hwnd, hdc);
   }
     break;
 
   case WM_PAINT:{
     PAINTSTRUCT ps;
     BeginPaint(hwnd, &ps);
-    BitBlt( hdcBackBuffer,
-	    0,
-	    0,
-	    cxClient,
-	    cyClient,
-	    NULL,
-	    NULL,
-	    NULL,
-	    WHITENESS );
+    BitBlt( hdcBackBuffer, 0, 0, cxClient, cyClient, NULL, NULL, NULL, WHITENESS );
 
     // start draw...
     // render...
@@ -95,7 +89,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 				      rectClientWindow.right,
 				      rectClientWindow.bottom );
 
-    Release(hwnd, hdc);
+    ReleaseDC(hwnd, hdc);
     SelectObject(hdcBackBuffer, hBitmap);
   }
     break;
