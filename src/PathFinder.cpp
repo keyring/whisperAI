@@ -103,10 +103,45 @@ std::string PathFinder::GetNameOfCurrentSearchAlgorithm() const {
 
 void PathFinder::Save( char *filename ){
 
+  ofstream save(filename);
+  assert(save && "PathFinder::Save< bad file >");
+
+  save << m_numCellX << endl;
+  save << m_numCellY << endl;
+
+  for(unsigned int t = 0; t < m_terrainType.size(); ++t){
+    if(t == m_sourceCell)
+      save << SOURCE << endl;
+    else if(t == m_targetCell)
+      save << TARGET << endl;
+    else
+      save << m_terrainType[t] << endl;
+  }
 }
 
 void PathFinder::Load( char *filename ){
 
+  ifstream load(filename);
+  assert(load && "PathFinder::Load< bad file >");
+
+  load >> m_numCellX;
+  load >> m_numCellY;
+
+  CreateGraph(m_numCellY, numCellX);
+
+  int terrain;
+
+  for(int t = 0; t < m_numCellX * numCellY; ++t){
+    load >> terrain;
+    if(terrain == SOURCE)
+      m_sourceCell = t;
+    else if(terrain == TARGET)
+      m_targetCell = t;
+    else{
+      m_terrainType[t] = terrain;
+      UpdateGraphFromBrush(terrain, t);
+    }
+  }
 }
 
 

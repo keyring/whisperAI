@@ -265,7 +265,6 @@ int WINAPI WinMain( HINSTANCE hInstance,
 
   g_pathFinder->CreateGraph( NUMCELLSX, NUMCELLSY );
 
-
   MSG msg;
   while(GetMessage( &msg, NULL, 0, 0 )){
     TranslateMessage(&msg);
