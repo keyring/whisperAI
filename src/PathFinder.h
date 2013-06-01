@@ -41,6 +41,11 @@ public :
  private:
   std::vector<int> m_terrainType;
   std::list<int> m_path;
+  
+  typedef SparseGraph<NavGraphNode<void*>, GraphEdge> NavGraph;
+  NavGraph *m_graph;
+  
+  std::vector<const GraphEdge*> m_subTree;
 
   double m_costToTarget;
   ALGORITHM_TYPE m_currentAlgorithm;
@@ -86,13 +91,13 @@ public:
 	       m_targetCell(0),
 	       m_cxClient(0),
 	       m_cyClient(0),
-	       m_costToTarget(0.0){ // need init graph....
-
+	       m_costToTarget(0.0),
+		   m_graph(NULL){ 
+		   
     // empty
+}
 
-}
-  ~PathFinder(){		// delete graph...
-}
+  ~PathFinder(){ delete m_graph; }
 
   void CreateGraph( int cellsUp, int cellsAcross );
   void Render();

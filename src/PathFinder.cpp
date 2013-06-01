@@ -7,15 +7,48 @@
 
 #include <iostream>
 
-#include "PathFinder.cpp"
+#include "PathFinder.h"
 
 using namespace std;
 
 extern const char *g_applicationName;
 extern const char *g_windowClassName;
 
+extern HWND g_hwndToolbar;
+
 void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 
+  RECT rectToolbar;
+  GetWindowRect( g_hwndToolbar, &rectToolbar );
+
+  HWND hwndMainWindow = FindWindow( g_windowClassName, g_applicationName );
+
+  RECT rect;
+  GetClientRect( hwndMainWindow, &rect );
+  m_cxClient = rect.right;
+  m_cyClient = rect.bottom - abs(rectToolbar.bottom - rectToolbar.top) - InfoWindowHeight;
+
+  m_terrainType.assign( cellsUp * cellsAcross, NORMAL );
+
+  m_numCellX = cellsAcross;
+  m_numCellY = cellsUp;
+  m_cellWidth = (double)m_cxClient / (double)cellsAcross;
+  m_cellHeight = (double)m_cyClient / (double)cellsUp;
+
+  delete m_graph;
+
+  m_graph = new NavGraph(false);
+
+  GraphHelper_CreateGrid( *m_graph, m_cxClient, m_cyClient, cellsUp, cellsAcross );
+
+  PointToIndex(VectorToPOINTS(Vector2D(m_cxClient/2, m_cellHeight*2)), m_targetCell);
+  PointToIndex(VectorToPOINTS(Vector2D(m_cxClient/2, m_cyClient - m_cellHeight*2)), m_sourceCell);
+
+  m_path.clear();
+  m_subTree.clear();
+
+  m_currentAlgorithm = NONE;
+  m_timeTaken = 0;
 
 }
 
