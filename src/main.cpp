@@ -13,6 +13,7 @@
 /*    Globals    */
 const char *g_applicationName = "Path Finder";
 const char *g_windowClassName = "MyClass";
+PathFinder *g_pathFinder;
 
 /*    Constant    */
 const int WINDOWWIDTH = 600;
@@ -41,7 +42,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
   static TCHAR filename[MAX_PATH], titlename[MAX_PATH];
   static RECT rectClientWindow;
-  static int CurrentSearchButton = 0;
+  static int currentSearchButton = 0;
 
   switch(msg){
 
@@ -57,8 +58,98 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     hOldBitmap = (HBITMAP)SelectObject( hdcBackBuffer, hBitmap );
 
     ReleaseDC(hwnd, hdc);
+
+    g_pathFinder = new PathFinder();
+
+    CheckMenuItemAppropriately( hwnd, IDM_VIEW_TILES, g_pathFinder->IsShowTilesOn());
+    CheckMenuItemAppropriately( hwnd, IDM_VIEW_GRAPH, g_pathFinder->IsShowGraphOn());
   }
     break;
+
+  case WM_KEYUP:{
+    switch(wParam){
+    case VK_ESCAPE:
+      SendMessage( hwnd, WM_DESTROY, NULL, NULL );
+      break;
+    case 'G':
+      g_pathFinder->ToggleShowGraph();
+      break;
+    case 'T':
+      g_pathFinder->ToggleShowTiles();
+      break;
+    } // switch
+
+    //    RedrawWindowRect( hwnd, false, rectClientWindow ); 
+  }
+    break;
+
+  case WM_LBUTTONDOWN:{
+    g_pathFinder->PaintTerrain(MAKEPOINTS(lParam));
+    // RedrawWindowRect( hwnd, false, rectClientWindow );
+  }
+    break;
+
+  case WM_MOUSEMOVE:{
+    switch(wParam){
+    case MK_LBUTTON:{
+      g_pathFinder->PaintTerrain(MAKEPOINTS(lParam));
+      // RedrawWindowRect( hwnd, false, rectClientWindow );
+    }
+      break;
+    }
+  }
+    break;
+
+  case WM_COMMAND:{
+    switch(wParam){
+    case ID_BUTTON_STOP:
+      g_pathFinder->ChangeBrush( PathFinder::TARGET );      break;
+    case ID_BUTTON_START:
+      g_pathFinder->ChangeBrush( PathFinder::SOURCE );      break;
+    case ID_BUTTON_OBSTACLE:
+      g_pathFinder->ChangeBrush( PathFinder::OBSTACLE );    break;
+    case ID_BUTTON_WATER:
+      g_pathFinder->ChangeBrush( PathFinder::WATER );       break;
+    case ID_BUTTON_MUD:
+      g_pathFinder->ChangeBrush( PathFinder::MUD );         break;
+    case ID_BUTTON_NORMAL:
+      g_pathFinder->ChangeBrush( PathFinder::NORMAL );      break;
+    case ID_BUTTON_DFS:
+      g_pathFinder->CreatePathDFS();
+      currentSearchButton = ID_BUTTON_DFS;    break;
+    case ID_BUTTON_BFS:
+      g_pathFinder->CreatePathBFS();
+      currentSearchButton = ID_BUTTON_BFS;    break;
+    case ID_BUTTON_DIJKSTRA:
+      g_pathFinder->CreatePathDijkstra();
+      currentSearchButton = ID_BUTTON_DIJKSTRA; break;
+    case ID_BUTTON_ASTAR:
+      g_pathFinder->CreatePathAStar();
+      currentSearchButton = ID_BUTTON_ASTAR;  break;
+
+    case ID_MENU_LOAD:
+      // FileOpenDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
+      if(strlen(titlename) > 0)
+	g_pathFinder->Load(titlename);
+
+      // SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
+      break;
+    case ID_MENU_SAVEAS:
+      // FileSaveDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
+      if(strlen(titlename) > 0)
+	g_pathFinder->Save(titlename);
+      break;
+
+    case ID_MENU_NEW:
+      g_pathFinder->CreateGraph( NUMCELLSX, NUMCELLSY );
+      // SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
+      break;
+
+    case IDM_VIEW_GRAPH:
+      if(GetMenuState(GetMenu(hwnd), IDM_VIEW_GRAPH, MFS_CHECKED) && MF_CHECKED){
+
+      }
+
 
   case WM_PAINT:{
     PAINTSTRUCT ps;
