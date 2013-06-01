@@ -19,8 +19,54 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 
 }
 
-void PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
+void PathFinder::Render(){
+
+}
+
+void PathFinder::PaintTerrain( POINTS p ){
+
+}
+
+double PathFinder::GetTerrainCost( const BRUSH_TYPE brush ){
+
+}
+
+
+void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
+
+}
+
+void PathFinder::UpdateAlgorithm(){
+
+}
+
+void PathFinder::CreatePathDFS(){
+
+}
+
+void PathFinder::CreatePathBFS(){
+
+}
+
+void PathFinder::CreatePathAStar(){
+
+}
+
+bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
 
 
 }
+
+std::string PathFinder::GetNameOfCurrentSearchAlgorithm() const {
+
+}
+
+void PathFinder::Save( char *filename ){
+
+}
+
+void PathFinder::Load( char *filename ){
+
+}
+
 
