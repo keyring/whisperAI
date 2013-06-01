@@ -158,6 +158,25 @@ void PathFinder::CreatePathDFS(){
 
 void PathFinder::CreatePathBFS(){
 
+  m_currentAlgorithm = BFS;
+
+  m_path.clear();
+  m_subTree.clear();
+
+  PrecisionTimer timer;
+  timer.Start();
+
+  Graph_SearchBFS<NavGraph> BFS( *m_graph, m_sourceCell, m_targetCell );
+
+  m_timeTaken = timer.TimeElapsed();
+
+  if(BFS.Found()){
+    m_path = BFS.GetPathToTarget();
+  }
+
+  m_subTree = BFS.GetSearchTree();
+
+  m_costToTarget = 0.0;
 }
 
 void PathFinder::CreatePathAStar(){
