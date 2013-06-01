@@ -22,9 +22,20 @@ class PathFinder{
 public :
   
   enum BRUSH_TYPE{
+    NORMAL = 0,
+    OBSTACLE,
+    WATER,
+    MUD,
+    SOURCE,
+    TARGET
   };
 
   enum ALGORITHM_TYPE{
+    NONE,
+    ASTAR,
+    BFS,
+    DFS,
+    DIJKSTRA
   };
 
  private:
@@ -61,8 +72,27 @@ public :
   std::string GetNameOfCurrentSearchAlgorithm() const;
 
 public:
-  PathFinder(){}
-  ~PathFinder(){}
+  PathFinder():m_start(false),
+	       m_finish(false),
+	       m_showGraph(false),
+	       m_showTiles(true),
+	       m_cellWidth(0.0),
+	       m_cellHeight(0.0),
+	       m_numCellX(0),
+	       m_numCellY(0),
+	       m_timeTaken(0.0),
+	       m_currentTerrainBrush(NORMAL),
+	       m_sourceCell(0),
+	       m_targetCell(0),
+	       m_cxClient(0),
+	       m_cyClient(0),
+	       m_costToTarget(0.0){ // need init graph....
+
+    // empty
+
+}
+  ~PathFinder(){		// delete graph...
+}
 
   void CreateGraph( int cellsUp, int cellsAcross );
   void Render();
