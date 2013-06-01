@@ -19,12 +19,60 @@
 
 class PathFinder{
 
- public :
-
+public :
+  
   enum BRUSH_TYPE{
   };
 
   enum ALGORITHM_TYPE{
   };
+
+ private:
+  std::vector<int> m_terrainType;
+  std::list<int> m_path;
+
+  double m_costToTarget;
+  ALGORITHM_TYPE m_currentAlgorithm;
+  BRUSH_TYPE m_currentTerrainBrush;
+
+  double m_cellWidth;
+  double m_cellHeight;
+
+  int m_numCellX;
+  int m_numCellY;
+
+  int m_cxClient;
+  int m_cyClient;
+
+  int m_sourceCell;
+  int m_targetCell;
+
+  bool m_start;
+  bool m_finish;
+
+  bool m_showTiles;
+
+  double m_timeTaken;
+
+  void UpdateAlgorithm();
+  void UpdateGraphFromBrush( int  brush, int cellIndex );
+
+  std::string GetNameOfCurrentSearchAlgorithm() const;
+
+public:
+  PathFinder(){}
+  ~PathFinder(){}
+
+  void CreateGraph( int cellsUp, int cellsAcross );
+  void Render();
+  void PaintTerrain( POINTS p );
+
+  /* all algorithm */
+  void CreatePathDFS();
+  void CreatePathBFS();
+  void CreatePathDijkstra();
+  void CreatePathAStar();
+  void MinSpanningTree();
+  
 
 #endif	/* __PATHFINDER_H__ */
