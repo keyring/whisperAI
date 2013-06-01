@@ -179,8 +179,40 @@ void PathFinder::CreatePathBFS(){
   m_costToTarget = 0.0;
 }
 
+void PathFinder::CreatePathDijkstra(){
+
+  m_currentAlgorithm = DIJKSTRA;
+  
+  PrecisionTimer timer;
+  timer.Start();
+  
+  Graph_SearchDijkstra<NavGraph> djk( *m_graph, m_sourceCell, m_targetCell );
+  
+  m_timeTaken = timer.TimeElapsed();
+  
+  m_path = djk.GetPathToTarget();
+  
+  m_subTree = djk.GetSPT();
+  
+  m_costToTarget = djk.GetCostToTarget();
+}
+
 void PathFinder::CreatePathAStar(){
 
+  m_currentAlgorithm = ASTAR;
+
+  PrecisionTimer timer;
+  timer.Start();
+
+  Graph_SearchAStar<NavGraph, Heuristic> AStar( *m_graph, m_sourceCell, m_targetCell );
+
+  m_timeTaken = timer.TimeElapsed();
+
+  m_path = AStar.GetPathToTarget();
+
+  m_subTree = AStar.GetSPT();
+
+  m_costToTarget = AStar.GetCostToTarget();
 }
 
 bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
