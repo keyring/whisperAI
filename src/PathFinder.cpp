@@ -83,7 +83,17 @@ void PathFinder::PaintTerrain( POINTS p ){
 
 double PathFinder::GetTerrainCost( const BRUSH_TYPE brush ){
 
-  
+  const double cost_normal = 1.0;
+  const double cost_water = 2.0;
+  const double cost_mud = 1.5;
+  const double cost_default = 0.0;
+
+  switch(brush){
+  case NORMAL: return cost_normal;
+  case WATER: return cost_water;
+  case MUD: return cost_mud;
+  default: return cost_default;
+  }
 }
 
 
@@ -108,6 +118,19 @@ void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
 
 void PathFinder::UpdateAlgorithm(){
 
+  switch(m_currentAlgorithm){
+  case NONE:
+    break;
+  case BFS:
+    CreatePathBFS();    break;
+  case DFS:
+    CreatePathDFS();    break;
+  case DIJKSTRA:
+    CreatePathDijkstra(); break;
+  case ASTAR:
+    CreatePathAStar();  break;
+  default: break;
+  }
 }
 
 void PathFinder::CreatePathDFS(){
@@ -124,7 +147,17 @@ void PathFinder::CreatePathAStar(){
 
 bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
 
+  int x = (int)((double)(p.x)/m_cellWidth);
+  int y = (int)((double)(p.y)/m_cellHeight);
 
+  if((x>m_numCellX) || (y>m_numCellY)){
+    nodeIndex = -1;
+    return false;
+  }
+
+  nodeIndex = y * m_numCellX + x;
+
+  return true;
 }
 
 std::string PathFinder::GetNameOfCurrentSearchAlgorithm() const {
