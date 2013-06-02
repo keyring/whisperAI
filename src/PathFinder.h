@@ -17,6 +17,7 @@
 #include <list>
 
 #include "Vector2D.h"
+#include "Utils.h"
 
 class PathFinder{
 

@@ -87,7 +87,7 @@ double PathFinder::GetTerrainCost( const BRUSH_TYPE brush ){
   const double cost_normal = 1.0;
   const double cost_water = 2.0;
   const double cost_mud = 1.5;
-  const double cost_default = 0.0;
+  const double cost_default = MaxDouble;
 
   switch(brush){
   case NORMAL: return cost_normal;
