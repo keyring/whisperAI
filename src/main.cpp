@@ -10,17 +10,42 @@
 #include <windows.h>
 #include <time.h>
 
+#include <CommCtrl.h>
+#pragma comment(lib, "comctl32.lib")
+
 #include "Constants.h"
+#include "PathFinder.h"
+#include "resource.h"
+
+#define UM_TOOLBAR_HAS_BEEN_CREATED (WM_USER + 33)
 
 /*    Globals    */
 const char *g_applicationName = "Path Finder";
 const char *g_windowClassName = "MyClass";
+
 PathFinder *g_pathFinder;
+
+HWND g_hwndToolbar;
 
 void RedrawDisplay( HWND hwnd ){
 
-  InvaliddateRect(hwnd, NULL, TRUE);
+  InvalidateRect(hwnd, NULL, TRUE);
   UpdateWindow(hwnd);
+}
+
+void ResizeToCorrectClientArea( HWND hwnd, int toolbarHeight, RECT clientArea ){
+
+  AdjustWindowRectEx( &clientArea,
+		      WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
+		      true,
+		      NULL );
+
+  SetWindowPos( hwnd,
+		NULL,
+		0, 0,
+		clientArea.right,
+		clientArea.bottom + toolbarHeight, 
+		SWP_NOMOVE | SWP_NOZORDER );
 }
 
 LRESULT CALLBACK WindowProc( HWND hwnd,
@@ -37,6 +62,8 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   static TCHAR filename[MAX_PATH], titlename[MAX_PATH];
   static RECT rectClientWindow;
   static int currentSearchButton = 0;
+
+  static int ToolBarHeight;
 
   switch(msg){
 
@@ -91,6 +118,36 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     }
       break;
     }
+  }
+    break;
+
+  case UM_TOOLBAR_HAS_BEEN_CREATED:{
+    RECT rectToolbar;
+    GetWindowRect( g_hwndToolbar, &rectToolbar);
+    ToolBarHeight = abs(rectToolbar.bottom - rectToolbar.top);
+
+    rectClientWindow.left = 0;
+    rectClientWindow.right = CLIENTWIDTH;
+    rectClientWindow.top = 0;
+    rectClientWindow.bottom = CLIENTHEIGHT + INFOWINDOWHEIGHT;
+
+    ResizeToCorrectClientArea( hwnd, ToolBarHeight, rectClientWindow );
+
+    SendMessage( g_hwndToolbar, WM_SIZE, wParam, lParam );
+
+    GetClientRect( hwnd, &rectClientWindow );
+    rectClientWindow.bottom = CLIENTHEIGHT - ToolBarHeight - 1;
+
+    hdcBackBuffer = CreateCompatibleDC(NULL);
+
+    HDC hdc = GetDC(hwnd);
+
+    hBitmap = CreateCompatibleBitmap( hdc,
+				      rectClientWindow.right,
+				      rectClientWindow.bottom );
+    hOldBitmap = (HBITMAP)SelectObject(hdcBackBuffer, hBitmap);
+
+    ReleaseDC(hwnd, hdc);
   }
     break;
 
@@ -163,6 +220,8 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
     // RedrawWindowRect( hwnd, false, rectClientWindow );
   }
+
+
   
 
 
