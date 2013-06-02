@@ -18,5 +18,53 @@
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\PathFinder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PrecisionTimer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WindowUtils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Constants.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PathFinder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PrecisionTimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>资源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon1.ico">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="toolbar.aps">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="toolbar1.bmp">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="toolbar.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
