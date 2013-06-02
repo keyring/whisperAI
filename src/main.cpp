@@ -48,30 +48,151 @@ void ResizeToCorrectClientArea( HWND hwnd, int toolbarHeight, RECT clientArea ){
 		SWP_NOMOVE | SWP_NOZORDER );
 }
 
+HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
+
+  const int numButtons = 11;
+
+  INITCOMMONCONTROLSEX cc;
+  cc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+  cc.dwICC = ICC_BAR_CLASSES;
+
+  if(!InitCommonControlsEx(&cc)){
+    MessageBox( NULL, "Failed to Load Common Ctrls", "ERROR", MB_OK );
+    return 0;
+  }
+
+  HWND hwndToolbar = CreateWindowEx( NULL,
+				     TOOLBARCLASSNAME,
+				     (LPSTR)NULL,
+				     WS_CHILD | WS_VISIBLE | CSS_BOTTOM,
+				     0, 0,
+				     0, 0,
+				     hwndParent,
+				     (HMENU)IDR_TOOLBAR1,
+				     hinstmain,
+				     NULL );
+
+  if(!hwndToolbar)
+    MessageBox( NULL, "Create Toolbar Failed", "ERROR", 0 );
+
+  SendMessage( hwndToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
+
+  // add bitmap to buttons
+  TBADDBITMAP tb;
+  tb.hInst = NULL;
+  tb.nID = (UINT_PTR)LoadBitmap((HINSTANCE)GetWindowLoadLong( hwndParent, GWL_HINSTANCE ), MAKEINTRESOURCE(IDR_TOOLBAR1));
+
+  int idx = SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
+
+  TBUTTON button[numButtons];
+
+  button[0].iBitmap   = 0;
+  button[0].idCommand = ID_BUTTON_STOP;
+  button[0].fsState   = TBSTATE_ENABLED;
+  button[0].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[0].dwData    = NULL;
+  button[0].iString   = NULL;
+
+  button[1].iBitmap   = 1;
+  button[1].idCommand = ID_BUTTON_START;
+  button[1].fsState   = TBSTATE_ENABLED;
+  button[1].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[1].dwData    = NULL;
+  button[1].iString   = NULL;
+  
+  button[2].iBitmap   = 2;
+  button[2].idCommand = ID_BUTTON_OBSTACLE;
+  button[2].fsState   = TBSTATE_ENABLED;
+  button[2].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[2].dwData    = NULL;
+  button[2].iString   = NULL;
+  
+  button[3].iBitmap   = 3;
+  button[3].idCommand = ID_BUTTON_MUD;
+  button[3].fsState   = TBSTATE_ENABLED;
+  button[3].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[3].dwData    = NULL;
+  button[3].iString   = NULL;
+  
+  button[4].iBitmap   = 4;
+  button[4].idCommand = ID_BUTTON_WATER;
+  button[4].fsState   = TBSTATE_ENABLED;
+  button[4].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[4].dwData    = NULL;
+  button[4].iString   = NULL;
+  
+  button[5].iBitmap   = 5;
+  button[5].idCommand = ID_BUTTON_NORMAL;
+  button[5].fsState   = TBSTATE_ENABLED;
+  button[5].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[5].dwData    = NULL;
+  button[5].iString   = NULL;
+  
+  //this creates a separater
+  button[6].iBitmap   = 265;
+  button[6].idCommand = 0;
+  button[6].fsState   = NULL;
+  button[6].fsStyle   = TBSTYLE_SEP;
+  button[6].dwData    = NULL;
+  button[6].iString   = NULL;
+  
+  button[7].iBitmap   = 6;
+  button[7].idCommand = ID_BUTTON_DFS;
+  button[7].fsState   = TBSTATE_ENABLED;
+  button[7].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[7].dwData    = NULL;
+  button[7].iString   = NULL;
+  
+  button[8].iBitmap   = 7;
+  button[8].idCommand = ID_BUTTON_BFS;
+  button[8].fsState   = TBSTATE_ENABLED;
+  button[8].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[8].dwData    = NULL;
+  button[8].iString   = NULL;
+
+  button[9].iBitmap   = 8;
+  button[9].idCommand = ID_BUTTON_DIJKSTRA;
+  button[9].fsState   = TBSTATE_ENABLED;
+  button[9].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[9].dwData    = NULL;
+  button[9].iString   = NULL;
+  
+  button[10].iBitmap   = 9;
+  button[10].idCommand = ID_BUTTON_ASTAR;
+  button[10].fsState   = TBSTATE_ENABLED;
+  button[10].fsStyle   = TBSTYLE_CHECKGROUP;
+  button[10].dwData    = NULL;
+  button[10].iString   = NULL;
+
+  SendMessage( hwndParent, TB_ADDBUTTONS, (WPARAM)numButtons, (LPARAM)(LPTBBUTTON)&button );
+
+  return hwndToolbar;
+}
+
 LRESULT CALLBACK WindowProc( HWND hwnd,
 			     UINT msg,
 			     WPARAM wParam,
 			     LPARAM lParam ){
-
+  
   static int cxClient, cyClient;
-
+  
   static HDC hdcBackBuffer;
   static HBITMAP hBitmap = NULL;
   static HBITMAP hOldBitmap = NULL;
-
+  
   static TCHAR filename[MAX_PATH], titlename[MAX_PATH];
   static RECT rectClientWindow;
   static int currentSearchButton = 0;
-
+  
   static int ToolBarHeight;
-
+  
   switch(msg){
-
+    
   case WM_CREATE:{
     srand((unsigned) time(NULL));
     hdcBackBuffer = CreateCompatibleDC(NULL);
     HDC hdc = GetDC(hwnd);
-
+    
     hBitmap = CreateCompatibleBitmap( hdc,
 				      cxClient,
 				      cyClient);
@@ -88,25 +209,23 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     break;
 
   case WM_KEYUP:{
+
     switch(wParam){
     case VK_ESCAPE:
-      SendMessage( hwnd, WM_DESTROY, NULL, NULL );
-      break;
+      SendMessage( hwnd, WM_DESTROY, NULL, NULL ); break;
     case 'G':
-      g_pathFinder->ToggleShowGraph();
-      break;
+      g_pathFinder->ToggleShowGraph(); break;
     case 'T':
-      g_pathFinder->ToggleShowTiles();
-      break;
+      g_pathFinder->ToggleShowTiles(); break;
     } // switch
 
-    //    RedrawWindowRect( hwnd, false, rectClientWindow ); 
+    RedrawWindowRect( hwnd, false, rectClientWindow ); 
   }
     break;
 
   case WM_LBUTTONDOWN:{
     g_pathFinder->PaintTerrain(MAKEPOINTS(lParam));
-    // RedrawWindowRect( hwnd, false, rectClientWindow );
+    RedrawWindowRect( hwnd, false, rectClientWindow );
   }
     break;
 
@@ -114,7 +233,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     switch(wParam){
     case MK_LBUTTON:{
       g_pathFinder->PaintTerrain(MAKEPOINTS(lParam));
-      // RedrawWindowRect( hwnd, false, rectClientWindow );
+      RedrawWindowRect( hwnd, false, rectClientWindow );
     }
       break;
     }
@@ -179,21 +298,21 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
       currentSearchButton = ID_BUTTON_ASTAR;  break;
 
     case ID_MENU_LOAD:
-      // FileOpenDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
+      FileOpenDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
       if(strlen(titlename) > 0)
 	g_pathFinder->Load(titlename);
 
-      // SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
+      SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
       break;
     case ID_MENU_SAVEAS:
-      // FileSaveDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
+      FileSaveDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
       if(strlen(titlename) > 0)
 	g_pathFinder->Save(titlename);
       break;
 
     case ID_MENU_NEW:
       g_pathFinder->CreateGraph( NUMCELLSX, NUMCELLSY );
-      // SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
+      SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
       break;
 
     case IDM_VIEW_GRAPH:
@@ -218,12 +337,8 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
       break;
     } // switch
 
-    // RedrawWindowRect( hwnd, false, rectClientWindow );
+    RedrawWindowRect( hwnd, false, rectClientWindow );
   }
-
-
-  
-
 
   case WM_PAINT:{
     PAINTSTRUCT ps;
@@ -315,6 +430,10 @@ int WINAPI WinMain( HINSTANCE hInstance,
   if( !hWnd ){
     MessageBox( NULL, "CreateWindow Failed!", "ERROR", 0 );
   }
+
+  g_hwndToolbar = CreateToolbar( hWnd, hInstance );
+
+  SendMessage( hWnd, UM_TOOLBAR_HAS_BEEN_CREATED, NULL, NULL );
 
   g_pathFinder->CreateGraph( NUMCELLSX, NUMCELLSY );
 
