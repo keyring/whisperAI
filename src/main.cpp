@@ -15,6 +15,7 @@
 
 #include "Constants.h"
 #include "PathFinder.h"
+#include "WindowUtils.h"
 #include "resource.h"
 
 #define UM_TOOLBAR_HAS_BEEN_CREATED (WM_USER + 33)
