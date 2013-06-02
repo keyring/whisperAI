@@ -65,7 +65,7 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   HWND hwndToolbar = CreateWindowEx( NULL,
 				     TOOLBARCLASSNAME,
 				     (LPSTR)NULL,
-				     WS_CHILD | WS_VISIBLE | CSS_BOTTOM,
+				     WS_CHILD | WS_VISIBLE | CS_BOTTOM,
 				     0, 0,
 				     0, 0,
 				     hwndParent,
@@ -81,11 +81,11 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   // add bitmap to buttons
   TBADDBITMAP tb;
   tb.hInst = NULL;
-  tb.nID = (UINT_PTR)LoadBitmap((HINSTANCE)GetWindowLoadLong( hwndParent, GWL_HINSTANCE ), MAKEINTRESOURCE(IDR_TOOLBAR1));
+  tb.nID = (UINT_PTR)LoadBitmap((HINSTANCE)GetWindowLong( hwndParent, GWL_HINSTANCE ), MAKEINTRESOURCE(IDR_TOOLBAR1));
 
   int idx = SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
 
-  TBUTTON button[numButtons];
+  TBBUTTON button[numButtons];
 
   button[0].iBitmap   = 0;
   button[0].idCommand = ID_BUTTON_STOP;
@@ -375,7 +375,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   }
     break;
 
-  case WM_DISTROY:{
+  case WM_DESTROY:{
     SelectObject(hdcBackBuffer, hOldBitmap);
     DeleteDC(hdcBackBuffer);
     DeleteObject(hBitmap);
@@ -403,7 +403,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hInstance = hInstance;
-  wc.hIcon = LoadIcon(hInstance, MAKEINSTAANCE(IDI_ICON1));
+  wc.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
   wc.hCursor = LoadCursor(NULL, IDC_ARROW);
   wc.hbrBackground = NULL;
   wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
@@ -419,8 +419,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 			 g_windowClassName,
 			 g_applicationName,
 			 WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-			 GetSystem(SM_CXSCREEN)/2 - WINDOWWIDTH/2,
-			 GetSystem(SM_CYSCREEN)/2 - WINDOWHEIGHT/2,
+			 GetSystemMetrics(SM_CXSCREEN)/2 - WINDOWWIDTH/2,
+			 GetSystemMetrics(SM_CYSCREEN)/2 - WINDOWHEIGHT/2,
 			 WINDOWWIDTH,
 			 WINDOWHEIGHT,
 			 NULL,
