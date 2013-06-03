@@ -50,6 +50,42 @@ class PrecisionTimer{
   void SmoothUpdatesOff(){ m_smoothUpdates = false; }
 };
 
+inline bool PrecisionTimer::ReadyForNextFrame(){
+
+  assert( m_normalFPS && "PrecisionTimer::ReadyForNextFrame<No FPS set in timer>" );
+  QueryPerformanceCounter((LARGE_INTEGER*)&m_currentTime);
+
+  if(m_currentTime > m_nextTime){
+    m_timeElapsed = (m_curentTime - m_lastTime) * m_timeScale;
+    m_lastTime = m_currentTime;
+
+    m_nextTime = m_currentTime + m_frameTime;
+
+    return true;
+  }
+
+  return false;
+}
+
+inline double PrecisionTimer::TimeElapsed(){
+
+  m_lastTimeElapsed = m_timeElapsed;
+  QueryPerformanceCounter((LARGE_INTEGER*)&m_currentTime);
+  m_timeElapsed = (m_currentTime - m_lastTimeInTimeElapsed) * m_timeScale;
+  m_lastTimeInTimeElapsed = m_currentTime;
+
+  const double smoothness = 5.0;
+
+  if(m_smoothUpdates){
+    if(m_timeElapsed < (m_lastTimeElapsed * smoothness))
+      return m_timeElapsed;
+    else
+      return 0.0;
+  }
+  else{
+    return m_timeElapsed;
+  }
+}
 
 
 #endif	/* __PRECISIONTIMER_H__ */
