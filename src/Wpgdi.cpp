@@ -31,7 +31,7 @@ Wpgdi::Wpgdi(){
   m_purplePen = CreatePen( PS_SOLID, 1, COLORS[PURPLE] );
   m_brownPen = CreatePen( PS_SOLID, 1, COLORS[BROWN] );
   m_darkGreenPen = CreatePen( PS_SOLID, 1, COLORS[DARK_GREEN] );
-  m_ligthBluePen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_BLUE] );
+  m_lightBluePen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_BLUE] );
   m_lightGreyPen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_GREY] );
   m_lightPinkPen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_PINK] );
   m_thickBlackPen = CreatePen( PS_SOLID, 1, COLORS[BLACK] );
@@ -69,7 +69,7 @@ Wpgdi::~Wpgdi(){
   DeleteObject(m_oldPen);
 
   DeleteObject(m_darkGreenPen);
-  DeleteObject(m_ligthBluePen);
+  DeleteObject(m_lightBluePen);
   DeleteObject(m_lightGreyPen);
   DeleteObject(m_lightPinkPen);
 

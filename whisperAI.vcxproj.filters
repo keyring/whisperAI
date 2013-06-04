@@ -30,6 +30,9 @@
     <ClCompile Include="src\WindowUtils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Wpgdi.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.h">
@@ -50,12 +53,27 @@
     <ClInclude Include="src\WindowUtils.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\GraphEdge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StreamUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Wpgdi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="icon1.ico">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="toolbar.aps">
       <Filter>资源文件</Filter>
     </None>
     <None Include="toolbar1.bmp">
