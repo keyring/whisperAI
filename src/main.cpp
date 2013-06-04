@@ -16,6 +16,7 @@
 #include "Constants.h"
 #include "PathFinder.h"
 #include "WindowUtils.h"
+#include "Wpgdi.h"
 #include "resource.h"
 
 #define UM_TOOLBAR_HAS_BEEN_CREATED (WM_USER + 33)
@@ -346,9 +347,11 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     BeginPaint(hwnd, &ps);
     BitBlt( hdcBackBuffer, 0, 0, cxClient, cyClient, NULL, NULL, NULL, WHITENESS );
 
-    // start draw...
+    wpgdi->StartDrawing(hdcBackBuffer);
+
     g_pathFinder->Render();
-    // stop draw...
+
+    wpgdi->StopDrawing(hdcBackBuffer);
 
     BitBlt( ps.hdc, 0, 0, cxClient, cyClient, hdcBackBuffer, 0, 0, SRCCOPY );
 

@@ -135,4 +135,31 @@ class Wpgdi{
     m_hdc = NULL;
   }
 
+  void SetPenColor( int color ){
+
+    assert(color < NUMCOLORS);
+    switch(color){
+    case BLACK: BlackPen(); return;
+    case WHITE: WhitePen(); return;
+    case RED: RedPen(); return;
+    case GREEN: GreenPen(); return;
+    case BLUE: BluePen(); return;
+    case PINK: PinkPen(); return;
+    case GREY: GreyPen(); return;
+    case YELLOW: YellowPen(); return;
+    case ORANGE: OrangePen(); return;
+    case PURPLE: PurplePen(); return;
+    case BROWN: BrownPen(); return;
+    case LIGHT_BLUE: LightBluePen(); return;
+    case LIGHT_GREY: LightGreyPen(); return;
+    case LIGHT_PINK: LightPinkPen(); return;
+    }
+  }
+
+
+
+
+
+};
+
 #endif	/* __WPGDI_H__ */
