@@ -334,21 +334,61 @@ template <class node_type, class edge_type>
   }
   else{
     CullInvalidEdges();
+  }
 }
 
 template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::AddEdge(EdgeType edge){
-
+  
+  assert((edge.GetSrc() < m_nextNodeIndex) && (edge.GetDst() < m_nextNodeIndex) &&
+	 "<SparseGraph::AddEdge>: invalid index");
+  if((m_nodes[edge.GetDst()].GetIndex() != INVALID_NODE_INDEX) &&
+     (m_nodes[edge.GetSrc()].GetIndex() != INVALID_NODE_INDEX)){
+    if(IsUniqueEdge(edge.GetSrc(), edge.GetDst())){
+      m_edges[edge.GetSrc()].push_back(edge);
+    }
+    if(!m_digraph){
+      if(IsUniqueEdge(edge.GetDst(), edge.GetSrc())){
+	EdgeType neeEdge = edge;
+	newEdge.SetSrc(edge.GetSrc());
+	newEdge.SetDst(edge.GetDst());
+	m_edges[edge.GetDst()].push_back(newEdge);
+      }
+    }
+  }
 }
 
 template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::RemoveEdge(int src, int dst){
-
+  
+  assert((src < m_nodes.size()) && (dst < m_nodes.size()) &&
+	 "<SparseGraph::RemoveEdge>: invalid index");
+  EdgeList::iterator curEdge;
+  
+  if(!m_digraph){
+    for(curEdge = m_edges[dst].begin();
+	curEdge != m_edges[dst].end();
+	++curEdge){
+      if(curEdge->GetDst() == src){
+	curEdge = m_edges[dst].erase(curEdge);
+	break;
+      }
+    }
+    
+    for(curEdge = m_edges[src].begin();
+	curEdge != m_edges[src].end();
+	++curEdge){
+      if(curEdge->GetDst() == dst){
+	curEdge = m_edges[src].erase(curEdge);
+	break;
+      }
+    }
+  }
 }
 
 template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
-
+  
 }
 
 template <class node_type, class edge_type>
