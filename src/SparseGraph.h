@@ -52,6 +52,7 @@ template <class node_type, class edge_type>
   EdgeType &GetEdge(int src, int dst);
 
   int GetNextFreeNodeIndex() const { return m_nextNodeIndex; }
+
   int AddNode(Nodetype node);
   void RemoveNode(int node);	/* remove by seting its index to invalidIndex */
 
@@ -81,6 +82,7 @@ template <class node_type, class edge_type>
 
   bool IsDigraph() const { return m_digraph; }
   bool IsEmpty() const { return m_nodes.empty(); }
+
   bool IsNodePresent(int nd)const;
   bool IsEdgePresent(int src, int dst) const;
 
@@ -183,7 +185,7 @@ template <class node_type, class edge_type>
 
 /* Implement Functions */
 
-templete <class node_type, class edge_type>
+template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::IsNodePresent(int nd) const{
 
       if((nd >= (int)m_nodes.size() || (m_nodes[nd].Index() == INVALID_NODE_INDEX))){
@@ -193,7 +195,7 @@ templete <class node_type, class edge_type>
 	return true;
     }
 
-    templete <class node_type, class edge_type>
+    template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::IsEdgePresent(int src, int dst)const{
 
       if(IsNodePresent(src) && IsNodePresent(dst)){
@@ -209,7 +211,7 @@ templete <class node_type, class edge_type>
 	return false;
     }
 
-templete <class node_type, class edge_type>
+template <class node_type, class edge_type>
       const NodeType &SparseGraph<node_type, edge_type>::GetNode(int index)const{
 
   assert((index < (int)m_nodes.size()) && (index >= 0) &&
@@ -218,7 +220,7 @@ templete <class node_type, class edge_type>
   return m_nodes[index];
 }
 
-templete <class node_type, class edge_type>
+template <class node_type, class edge_type>
   NodeType &SparseGraph<node_type, edge_type>::GetNode(int index){
 
   assert((index < (int)m_nodes.size()) && (index >= 0) &&
@@ -227,7 +229,7 @@ templete <class node_type, class edge_type>
   return m_nodes[index];
 }
 
-templete <class node_type, class edge_type>
+template <class node_type, class edge_type>
   const EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst)const{
 
   assert((src < m_nodes.size()) && (src >= 0) &&
@@ -248,7 +250,7 @@ templete <class node_type, class edge_type>
 }
 
 
-templete <class node_type, class edge_type>
+template <class node_type, class edge_type>
   EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst){
 
   assert((src < m_nodes.size()) && (src >= 0) &&
@@ -268,10 +270,45 @@ templete <class node_type, class edge_type>
   assert(0 && "<SparseGraph::GetEdge>: edge does not exist");
 }
 
+template <class node_type, class edge_type>
+  int SparseGraph<node_type, edge_type>::AddNode(NodeType node){
 
+}
 
+template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::RemoveNode(int node){
 
+}
 
+template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::AddEdge(EdgeType edge){
+
+}
+
+template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
+
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::Save(const char *filename) const {
+
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::Save(std::ofstream &stream) const {
+
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::Load(const char *filename){
+
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::Load(std::ifstream &stream){
+
+}
 
 
 
