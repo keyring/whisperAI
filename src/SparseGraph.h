@@ -185,6 +185,28 @@ template <class node_type, class edge_type>
 
 /* Implement Functions */
 
+
+template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::CullInvalidEdges(){
+
+  for(EdgeListVector::iterator curEdgeList = m_edges.begin();
+      curEdgeList != m_edges.end(); ++curEdgeList){
+    for(EdgeList::iterator curEdge = (*curEdgeList).begin();
+	curEdge != (*curEdgeList).end(); ++curEdge){
+      if(m_nodes[curEdge->GetDst()].GetIndex() == INVALID_NODE_INDEX ||
+	 m_nodes[curEdge->GetSrc()].GetIndex() == INVALID_NODE_INDEX){
+	curEdge = (*curEdgeList).erase(curEdge);
+      }
+    }
+  }
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
+
+
+}
+
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::IsNodePresent(int nd) const{
 
@@ -349,16 +371,6 @@ template <class node_type, class edge_type>
 
 }
 
-template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::CullInvalidEdges(){
-
-}
-
-template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
-
-
-}
 
 
 
