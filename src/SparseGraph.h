@@ -178,5 +178,101 @@ template <class node_type, class edge_type>
 
   friend class NodeIterator;
 
+};
+
+
+/* Implement Functions */
+
+templete <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::IsNodePresent(int nd) const{
+
+      if((nd >= (int)m_nodes.size() || (m_nodes[nd].Index() == INVALID_NODE_INDEX))){
+	return false;
+      }
+      else
+	return true;
+    }
+
+    templete <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::IsEdgePresent(int src, int dst)const{
+
+      if(IsNodePresent(src) && IsNodePresent(dst)){
+	for(EdgeList::const_iterator curEdge = m_edges[src].begin();
+	    curEdge != m_edges[src].end();
+	    ++curEdge){
+	  if(curEdge->GetDst() == dst)
+	    return true;
+	}
+	return false;
+      }
+      else
+	return false;
+    }
+
+templete <class node_type, class edge_type>
+      const NodeType &SparseGraph<node_type, edge_type>::GetNode(int index)const{
+
+  assert((index < (int)m_nodes.size()) && (index >= 0) &&
+	 "<SparseGraph::<GetNode>: invalid index");
+
+  return m_nodes[index];
+}
+
+templete <class node_type, class edge_type>
+  NodeType &SparseGraph<node_type, edge_type>::GetNode(int index){
+
+  assert((index < (int)m_nodes.size()) && (index >= 0) &&
+	 "<SparseGraph::<GetNode>: invalid index");
+
+  return m_nodes[index];
+}
+
+templete <class node_type, class edge_type>
+  const EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst)const{
+
+  assert((src < m_nodes.size()) && (src >= 0) &&
+	 m_nodes[src].Index != INVALID_NODE_INDEX &&
+	 "<SparseGraph::GetEdge>: invalid 'src' index");
+  assert((dst < m_nodes.size()) && (dst >= 0) &&
+	 m_nodes[dst].Index != INVALID_NODE_INDEX &&
+	 "<SparseGraph::GetEdge>: invalid 'dst' index");
+
+  for(EdgeList::const_iterator curEdge = m_edges[src].begin();
+      curEdge != m_edges[src].end();
+      ++curEdge){
+    if(curEdge->GetDst() == dst)
+      return *curEdge;
+  }
+
+  assert(0 && "<SparseGraph::GetEdge>: edge does not exist");
+}
+
+
+templete <class node_type, class edge_type>
+  EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst){
+
+  assert((src < m_nodes.size()) && (src >= 0) &&
+	 m_nodes[src].Index != INVALID_NODE_INDEX &&
+	 "<SparseGraph::GetEdge>: invalid 'src' index");
+  assert((dst < m_nodes.size()) && (dst >= 0) &&
+	 m_nodes[dst].Index != INVALID_NODE_INDEX &&
+	 "<SparseGraph::GetEdge>: invalid 'dst' index");
+
+  for(EdgeList::const_iterator curEdge = m_edges[src].begin();
+      curEdge != m_edges[src].end();
+      ++curEdge){
+    if(curEdge->GetDst() == dst)
+      return *curEdge;
+  }
+
+  assert(0 && "<SparseGraph::GetEdge>: edge does not exist");
+}
+
+
+
+
+
+
+
 
 #endif	/* __SPARSEGRAPH_H__ */
