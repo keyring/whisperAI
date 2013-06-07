@@ -396,6 +396,17 @@ template <class node_type, class edge_type>
 template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
   
+  assert((src < m_nodes.size()) && (dst < m_nodes.size()) &&
+	 "<SparseGraph::SetEdgeCost>: invalid index");
+
+  for(EdgeList::iterator curEdge = m_edges[src].begin();
+      curEdge != m_edges[src].end();
+      ++curEdge){
+    if(curEdge->GetDst() == dst){
+      curEdge->SetCost(cost);
+      break;
+    }
+  }
 }
 
 template <class node_type, class edge_type>
