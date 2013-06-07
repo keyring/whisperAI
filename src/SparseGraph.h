@@ -286,6 +286,11 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::RemoveEdge(int src, int dst){
+
+}
+
+template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
 
 }
@@ -307,6 +312,17 @@ template <class node_type, class edge_type>
 
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::Load(std::ifstream &stream){
+
+}
+
+template <class node_type, class edge_type>
+  void SparseGraph<node_type, edge_type>::CullInvalidEdges(){
+
+}
+
+template <class node_type, class edge_type>
+  bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
+
 
 }
 
