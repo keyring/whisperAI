@@ -102,6 +102,36 @@ template <class node_type, class edge_type>
     }
   }
 
+  class EdgeIterator{
+
+  private:
+    typename EdgeList::iterator curEdge;
+    SparseGraph<node_type, edge_type> &G;
+    const int m_nodeIndex;
+
+  public:
+  EdgeIterator(SparseGraph<node_type, edge_type> &graph, int node):
+    G(graph), m_nodeIndex(node){
+
+      curEdge = G.m_edges[m_nodeIndex].begin();
+    }
+
+    EdgeType *begin(){
+      curEdge = G.m_edges[m_nodeIndex].begin();
+      return &(*curEdge);
+    }
+
+    EdgeType *next(){
+      ++curEdge;
+      if(end())
+	return NULL;
+      return &(*curEdge);
+    }
+
+    bool end(){
+      return (curEdge == G.m_edges[m_nodeIndex].end());
+    }
+  };
 
 
 #endif	/* __SPARSEGRAPH_H__ */
