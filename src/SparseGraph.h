@@ -21,6 +21,10 @@
 #include "Vector2D.h"
 #include "Utils.h"
 
+enum{
+  INVALID_NODE_INDEX = -1;
+};
+
 
 template <class node_type, class edge_type>
   class SparseGraph{
@@ -105,37 +109,74 @@ template <class node_type, class edge_type>
   }
 
   class EdgeIterator{
-
+    
   private:
     typename EdgeList::iterator curEdge;
     SparseGraph<node_type, edge_type> &G;
     const int m_nodeIndex;
-
+    
   public:
   EdgeIterator(SparseGraph<node_type, edge_type> &graph, int node):
     G(graph), m_nodeIndex(node){
-
+      
       curEdge = G.m_edges[m_nodeIndex].begin();
     }
-
+    
     EdgeType *begin(){
       curEdge = G.m_edges[m_nodeIndex].begin();
       return &(*curEdge);
     }
-
+    
     EdgeType *next(){
       ++curEdge;
       if(end())
 	return NULL;
       return &(*curEdge);
     }
-
+    
     bool end(){
       return (curEdge == G.m_edges[m_nodeIndex].end());
     }
-  };
-
+  };				/* EdgeIterator */
+  
   friend class EdgeIterator;
+
+
+  
+  class ConstEdgeIterator{
+
+  private:
+    typename EdgeList::iterator curEdge;
+    const SparseGraph<node_type, edge_type> &G;
+    const int m_nodeIndex;
+    
+  public:
+  ConstEdgeIterator(const SparseGraph<node_type, edge_type> &graph, int node):
+    G(graph), m_nodeIndex(node){
+      
+      curEdge = G.m_edges[m_nodeIndex].begin();
+    }
+    
+    const EdgeType *begin(){
+      curEdge = G.m_edges[m_nodeIndex].begin();
+      return &(*curEdge);
+    }
+    
+    const EdgeType *next(){
+      ++curEdge;
+      if(end())
+	return NULL;
+      return &(*curEdge);
+    }
+    
+    bool end(){
+      return (curEdge == G.m_edges[m_nodeIndex].end());
+    }
+  };				/* ConstEdgeIterator */
+
+  friend class ConstEdgeIterator;
+
+
 
   class NodeIterator{
 
@@ -145,9 +186,9 @@ template <class node_type, class edge_type>
 
     void GetNextValidNode(typename NodeVector::iterator &it){
 
-      if(curNode == G.m_nodes.end() || it->Index() != INVALID_NODE_INDEX)
+      if(curNode == G.m_nodes.end() || it->GetIndex() != INVALID_NODE_INDEX)
 	return;
-      while((it->Index() == INVALID_NODE_INDEX)){
+      while((it->GetIndex() == INVALID_NODE_INDEX)){
 	++it;
 	if(curNode == G.m_nodes.end())
 	  break;
@@ -169,18 +210,68 @@ template <class node_type, class edge_type>
       ++curNode;
       if(end())
 	return NULL;
-      GetNextValidNode(curNode);
-      return &(*curNode);
+      else{
+	GetNextValidNode(curNode);
+	return &(*curNode);
+      }
     }
 
     bool end(){
       return (curNode == G.m_nodes.end());
     }
-  };
+  };				/* NodeIterator */
 
   friend class NodeIterator;
 
-};
+
+
+
+  class ConstNodeIterator{
+
+  private:
+    typename NodeVector::iterator curNode;
+    const SparseGraph<node_type, edge_type> &G;
+
+    void GetNextValidNode(typename NodeVector::iterator &it){
+
+      if(curNode == G.m_nodes.end() || it->GetIndex() != INVALID_NODE_INDEX)
+	return;
+      while((it->GetIndex() == INVALID_NODE_INDEX)){
+	++it;
+	if(curNode == G.m_nodes.end())
+	  break;
+      }
+    }
+
+  public:
+  ConstNodeIterator(const SparseGraph<node_type, edge_type> &graph):G(graph){
+      curNode = G.m_nodes.begin();
+    }
+
+    const NodeType *begin(){
+      curNode = G.m_nodes.begin();
+      GetNextValidNode(curNode);
+      return &(*curNode);
+    }
+
+    const NodeType *next(){
+      ++curNode;
+      if(end())
+	return NULL;
+      else{
+	GetNextValidNode(curNode);
+	return &(*curNode);
+      }
+    }
+
+    bool end(){
+      return (curNode == G.m_nodes.end());
+    }
+  };				/* ConstNodeIterator */
+
+  friend class ConstNodeIterator;
+
+};				/* SparseGraph */
 
 
 /* Implement Functions */
