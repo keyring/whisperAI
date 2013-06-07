@@ -133,5 +133,50 @@ template <class node_type, class edge_type>
     }
   };
 
+  friend class EdgeIterator;
+
+  class NodeIterator{
+
+  private:
+    typename NodeVector::iterator curNode;
+    SparseGraph<node_type, edge_type> &G;
+
+    void GetNextValidNode(typename NodeVector::iterator &it){
+
+      if(curNode == G.m_nodes.end() || it->Index() != INVALID_NODE_INDEX)
+	return;
+      while((it->Index() == INVALID_NODE_INDEX)){
+	++it;
+	if(curNode == G.m_nodes.end())
+	  break;
+      }
+    }
+
+  public:
+  NodeIterator(SparseGraph<node_type, edge_type> &graph):G(graph){
+      curNode = G.m_nodes.begin();
+    }
+
+    NodeType *begin(){
+      curNode = G.m_nodes.begin();
+      GetNextValidNode(curNode);
+      return &(*curNode);
+    }
+
+    NodeType *next(){
+      ++curNode;
+      if(end())
+	return NULL;
+      GetNextValidNode(curNode);
+      return &(*curNode);
+    }
+
+    bool end(){
+      return (curNode == G.m_nodes.end());
+    }
+  };
+
+  friend class NodeIterator;
+
 
 #endif	/* __SPARSEGRAPH_H__ */
