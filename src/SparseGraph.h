@@ -52,10 +52,55 @@ template <class node_type, class edge_type>
   EdgeType &GetEdge(int src, int dst);
 
   int GetNextFreeNodeIndex() const { return m_nextNodeIndex; }
-  int AddNode(node_type node);
+  int AddNode(Nodetype node);
   void RemoveNode(int node);	/* remove by seting its index to invalidIndex */
 
+  void AddEdge(EdgeType edge);
+  void RemoveEdge(int src, int dst);
+  void SetEdgeCost(int src, int dst, double cost);
 
+  int GetNumNodes() const { return m_nodes.size(); }
+
+  int GetNumActiveNodes() const {
+    int count = 0;
+    for(unsigned int n = 0; n < m_nodes.size(); ++n)
+      if(m_nodes[n].Index() != INVALID_NODE_INDEX)
+	++count;
+    return count;
+  }
+
+  int GetNumEdges() const{
+    int tot = 0;
+    for(EdgeListVector::const_iterator curEdge = m_edges.begin();
+	curEdge != m_edges.end();
+	++curEdge){
+      tot += curEdge->size();
+    }
+    return tot;
+  }
+
+  bool IsDigraph() const { return m_digraph; }
+  bool IsEmpty() const { return m_nodes.empty(); }
+  bool IsNodePresent(int nd)const;
+  bool IsEdgePresent(int src, int dst) const;
+
+  bool Save(const char *filename) const;
+  bool Save(std::ofstream &stream) const;
+
+  bool Load(const char *filename);
+  bool Load(std::ifstream &stream);
+
+  void Clear(){
+    m_nextNodeIndex = 0;
+    m_nodes.clear();
+    m_edges.clear();
+  }
+
+  void RemoveEdges(){
+    for(EdgeListVector::iterator it = m_edges.begin(); it != m_edges.end(); ++it){
+      it->clear();
+    }
+  }
 
 
 
