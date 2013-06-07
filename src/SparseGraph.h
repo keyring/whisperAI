@@ -445,11 +445,41 @@ template <class node_type, class edge_type>
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::Load(const char *filename){
 
+  std::ifstream in(filename);
+
+  if(!in){
+    throw std::runtime_error("Can not open file: " + std::string(filename));
+    return false;
+  }
+  return Load(in);
 }
 
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::Load(std::ifstream &stream){
 
+  Clear();
+  int numnodes, numedges;
+
+  stream >> numnodes;
+  for(int n = 0; n < numnodes; ++n){
+    NodeType newNode(stream);
+    if(newEdge.GetIndex() != INVALID_NODE_INDEX){
+      AddNode(newNode);
+    }
+    else{
+      m_nodes.push_back(newNode);
+      m_edges.push_back(EdgeList());
+      ++m_nextNodeIndex;
+    }
+  }
+
+  stream >> numedges;
+  for(int e = 0; e < numedges; ++e){
+    EdgeType nextEdge(stream);
+    AddEdge(nextEdge);
+  }
+
+  return true;
 }
 
 
