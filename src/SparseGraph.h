@@ -412,11 +412,34 @@ template <class node_type, class edge_type>
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::Save(const char *filename) const {
 
+  std::ofstream out(filename);
+
+  if(!out){
+    throw std::runtime_error("Can not open file:" + std::string(filename));
+    return false;
+  }
+  return Save(out);
 }
 
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::Save(std::ofstream &stream) const {
+  stream << m_nodes.size() << std::endl;
 
+  NodeVector::const_iterator curNode = m_nodes.begin();
+  for(curNode; curNode != m_nodes.end(); ++curNode){
+    stream << *curNode;
+  }
+
+  stream << GetNumEdges() << std::endl;
+
+  for(unsigned int nodeIdx = 0; nodeIdx < m_nodes.size(); ++nodeIdx){
+    for(EdgeList::const_iterator curEdge = m_edges[nodeIdx].begin();
+	curEdge != m_edges[nodeIdx].end();
+	++curEdge){
+      stream << *curEdge;
+    }
+  }
+  return true;
 }
 
 template <class node_type, class edge_type>
