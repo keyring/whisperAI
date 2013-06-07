@@ -273,11 +273,45 @@ template <class node_type, class edge_type>
 template <class node_type, class edge_type>
   int SparseGraph<node_type, edge_type>::AddNode(NodeType node){
 
+  if(node.GetIndex() < (int)m_nodes.size()){
+    assert(m_nodes[node.GetIndex()].GetIndex() == INVALID_NODE_INDEX &&
+	   "<SparseGraph::AddNode>: attempting to add a node with a duplicate ID");
+    m_nodes[node.GetIndex()] = node;
+    return m_nextNodeIndex;
+  }
+  else{
+    assert(node.GetIndex() == m_nextNodeIndex &&
+	   "<SparseGraph::AddNode>: invalid index");
+    m_nodes.push_back(node);
+    m_edges.push_back(EdgeList());
+
+    return m_nextNodeIndex;
+  }
 }
 
 template <class node_type, class edge_type>
   void SparseGraph<node_type, edge_type>::RemoveNode(int node){
 
+  assert(node < (int)m_nodes.size() && "<SparseGraph::RemoveNode>: invalid index");
+  m_nodes[node].SetIndex(INVALID_NODE_INDEX);
+
+  if(!m_digraph){
+    for(EdgeList::iterator curEdge = m_edges[node].begin();
+	curEdge != m_edges[node].end();
+	++curEdge){
+      for(EdgeList::iterator curE = m_edges[curEdge->GetDst()].begin();
+	  curE != m_edges[curEdge->GetDst()].end();
+	  ++curE){
+	if(curE->GetDst() == node){
+	  curE = m_edges[curEdge-GetDst()].erase(curE);
+	  break;
+	}
+      }
+    }
+    m_edges[node].clear();
+  }
+  else{
+    CullInvalidEdges();
 }
 
 template <class node_type, class edge_type>
