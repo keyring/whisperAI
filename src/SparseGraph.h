@@ -204,7 +204,14 @@ template <class node_type, class edge_type>
 template <class node_type, class edge_type>
   bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
 
-
+  for(EdgeList::iterator curEdge = m_edges[src].begin();
+      curEdge != m_edges[src].end();
+      ++curEdge){
+    if(curEdge.GetDst() == dst){
+      return false;
+    }
+  }
+  return true;
 }
 
 template <class node_type, class edge_type>
