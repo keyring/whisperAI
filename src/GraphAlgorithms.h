@@ -74,7 +74,7 @@ bool Graph_SearchDFS<graph_type>::Search(){
 
   std::stack<const Edge*> stack;
 
-  Edge Dummy(m_source, m_source, 0);
+  Edge Dummy(m_source, m_source, 0.0);
 
   stack.push( &Dummy );
 
@@ -113,7 +113,18 @@ bool Graph_SearchDFS<graph_type>::Search(){
 template <class graph_type>
 std::list<int> Graph_SearchDFS<graph_type>::GetPathToTarget() const {
 
+  std::list<int> path;
 
+  if(!m_found || m_target<0)
+    return path;
+
+  int nd = m_target;
+  while(nd != m_source){
+    nd = m_route[nd];
+    path.push_front(nd);
+  }
+
+  return path;
 }
 
 
@@ -122,7 +133,42 @@ std::list<int> Graph_SearchDFS<graph_type>::GetPathToTarget() const {
 template <class graph_type>
 class Graph_SearchBFS{
 
+ private:
+  enum{
+    VISITED,
+    UNVISITED,
+    NO_PARENT_ASSIGNED
+  };
 
+  typedef typename graph_type::EdgeType Edge;
+
+ private:
+  const graph_type &m_graph;
+  std::vector<int> m_visited;
+  std::vector<int> m_route;
+  std::vector<const Edge *> m_spanningTree;
+
+  int m_source;
+  int m_target;
+
+  bool m_found;
+
+  bool Search();       	/* BFS is similar to DFS but using QUEUE not STACK */
+
+ public:
+ Graph_SearchBFS(const graph_type &graph, int source, int target-1):
+  m_graph(graph), m_source(source), m_target(target), m_found(false),
+    m_visited(m_graph.GetNumNodes(), UNVISITED),
+    m_route(m_graph.GetNumNodes(), NO_PARENT_ASSIGNED){
+
+    m_found = Search();
+  }
+
+  bool Found() const { return m_found; }
+
+  std::vector<const Edge *> GetSearchTree() const { return m_spanningTree; }
+
+  std::list<int> GetPathToTarget() const;
 };
 
 template <class graph_type>
