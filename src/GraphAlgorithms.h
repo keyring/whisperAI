@@ -174,8 +174,40 @@ class Graph_SearchBFS{
 template <class graph_type>
 bool Graph_SearchBFS<graph_type>::Search(){
 
+  std::queue<const Edge *> queue;
 
+  const Edge Dummy(m_source, m_source, 0);
+
+  queue.push( &Dummy );
+
+  m_visited[m_source] = VISITED;
+
+  while(!queue.empty()){
+    const Edge* next = queue.front();
+    queue.pop();
+    m_route[next->GetDst()] = next->GetSrc();
+
+    if(next != &Dummy){
+      m_spanningTree.push_back(next);
+    }
+
+    if(next->GetDst() == m_target){
+      return true;
+    }
+
+    graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, next->GetDst());
+
+    for(const Edge *e = ConstEdgeItr.begin();
+	!ConstEdgeItr.end();
+	e=ConstEdgeItr.next()){
+      if(m_visited[e->GetDst()] = UNVISITED){
+	queue.push(e);
+	m_visited[e->GetDst()] = VISITED;
+      }
+    }
+  }
 }
+
 
 template <class graph_type>
 std::list<int> Graph_SearchBFS<graph_type>::GetPathToTarget() const {
@@ -200,7 +232,21 @@ bool Graph_SearchDijkstra<graph_type>::Search(){
 template <class graph_type>
 std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 
+  std::list<int> path;
 
+  if(!m_found || m_target<0)
+    return path;
+
+  int nd = m_target;
+
+  path.push_front(nd);
+
+  while(nd != m_source){
+    nd = m_route[nd];
+    path.push_front(nd);
+  }
+
+  return path;
 }
 
 
