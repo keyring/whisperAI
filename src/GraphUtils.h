@@ -106,9 +106,31 @@ void GraphHelper_CreateGrid(graph_type &graph,
 }
 
 
+template <class graph_type>
+void WeightNavGraphNodeEdges(graph_type &graph, int node, double weight){
 
+  /* 
+   * give a cost value and an index to a valid node this function examines
+   * all a node's edges, calculates their length, and multiplies the
+   * value with the weight. Useful for setting terrain costs.
+   */
+  assert(node < graph.GetNumNodes());
 
+  graph_type::ConstEdgeIterator ConstEdgeItr(graph, node);
+  for(const graph_type::EdgeType *e = ConstEdgeItr.begin();
+      !ConstEdgeItr.end();
+      e=ConstEdgeItr.next()){
 
+    double dist = Vec2DDistance(graph.GetNode(e->GetSrc()).GetPosition(),
+				graph.GetNode(e->GetDst()).GetPosition());
+
+    graph.SetEdgeCost(e->GetSrc(), e->GetDst(), dist * weight);
+
+    if(!graph.IsDigraph()){
+      graph.SetEdgeCost(e->GetDst(), e->GetSrc(), dist * weight);
+    }
+  }
+}
 
 
 #endif	/* __GRAPHUTILES_H__ */

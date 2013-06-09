@@ -7,12 +7,7 @@
 
 #include <iostream>
 
-#include "Constants.h"
 #include "PathFinder.h"
-#include "PrecisionTimer.h"
-#include "GraphUtils.h"
-#include "StreamUtils.h"
-
 
 using namespace std;
 
@@ -148,15 +143,15 @@ void PathFinder::CreatePathDFS(){
   PrecisionTimer timer;
   timer.Start();
 
-  Graph_SearchDFS<NavGraph> DFS( *m_graph, m_sourceCell, m_targetCell );
+  Graph_SearchDFS<NavGraph> dfs( *m_graph, m_sourceCell, m_targetCell );
 
   m_timeTaken = timer.TimerElapsed();
 
-  if(DFS.Found()){
-    m_path = DFS.GetPathToTarget();
+  if(dfs.Found()){
+    m_path = dfs.GetPathToTarget();
   }
 
-  m_subTree = DFS.GetSearchTree();
+  m_subTree = dfs.GetSearchTree();
 
   m_costToTarget = 0.0;
 }
@@ -171,15 +166,15 @@ void PathFinder::CreatePathBFS(){
   PrecisionTimer timer;
   timer.Start();
 
-  Graph_SearchBFS<NavGraph> BFS( *m_graph, m_sourceCell, m_targetCell );
+  Graph_SearchBFS<NavGraph> bfs( *m_graph, m_sourceCell, m_targetCell );
 
   m_timeTaken = timer.TimeElapsed();
 
-  if(BFS.Found()){
-    m_path = BFS.GetPathToTarget();
+  if(bfs.Found()){
+    m_path = bfs.GetPathToTarget();
   }
 
-  m_subTree = BFS.GetSearchTree();
+  m_subTree = bfs.GetSearchTree();
 
   m_costToTarget = 0.0;
 }
