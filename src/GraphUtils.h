@@ -21,6 +21,51 @@
 
 
 template <class graph_type>
+void GraphHelper_AddAllNeighboursToGridNode(graph_type &graph,
+					    int row, 
+					    int col,
+					    int numCellsX,
+					    int numCellsY){
+  /* use to add the eight neighboring edges of a graph node that is  
+   * positioned in a grid layout
+   */
+  
+  for(int i = -1; i < 2; ++i){
+    for(int j = 1; j < 2; ++j){
+      int nodeX = col + j;
+      int nodeY = row + i;
+
+      if((i == 0) && (j == 0))
+	continue;
+
+      if(ValidNeighbor(nodeX, nodeY, numCellsX, numCellsY)){
+	Vector2D posNode = graph.GetNode(row*numCellsX+col).Pos();
+	Vector2D posNeighbor = graph.GetNode(nodeY*numCellsX+nodeX).GetPos();
+
+	double dist = posNode.Distance(posNeighbor);
+
+	graph_type::EdgeType newEdge(row*numCellsX+col,
+				     nodeY*numCellsX+nodeX,
+				     dist);
+	graph.AddEdge(newEdge);
+
+	/* 
+	 * if graph is not a diagraph then an edge needs to be added going
+	 * in the other direction
+	 */
+	if(!graph.IsDigraph()){
+	  graph_type::EdgeType newEdge(nodeY*numCellsX+nodeX,
+				       row*numCellsX+col,
+				       dist);
+	  graph.AddEdge(newEdge);
+	}
+      }
+    }
+  }
+}
+	
+
+template <class graph_type>
 void GraphHelper_CreateGrid(graph_type &graph,
 			    int cySize, 
 			    int cxSize,
