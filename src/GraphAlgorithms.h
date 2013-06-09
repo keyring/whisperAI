@@ -212,6 +212,21 @@ bool Graph_SearchBFS<graph_type>::Search(){
 template <class graph_type>
 std::list<int> Graph_SearchBFS<graph_type>::GetPathToTarget() const {
 
+  std::list<int> path;
+
+  if(!m_found || m_target<0)
+    return path;
+
+  int nd = m_target;
+
+  path.push_front(nd);
+
+  while(nd != m_source){
+    nd = m_route[nd];
+    path.push_front(nd);
+  }
+
+  return path;
 }
 
 
@@ -232,21 +247,6 @@ bool Graph_SearchDijkstra<graph_type>::Search(){
 template <class graph_type>
 std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 
-  std::list<int> path;
-
-  if(!m_found || m_target<0)
-    return path;
-
-  int nd = m_target;
-
-  path.push_front(nd);
-
-  while(nd != m_source){
-    nd = m_route[nd];
-    path.push_front(nd);
-  }
-
-  return path;
 }
 
 
