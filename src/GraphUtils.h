@@ -21,6 +21,12 @@
 
 
 template <class graph_type>
+bool ValidNeighbour(int x, int y, int numCellsX, int numCellsY){
+
+  return !((x < 0) || (x >= numCellsX) || (y < 0) || (y >= numCellsY));
+}
+
+template <class graph_type>
 void GraphHelper_AddAllNeighboursToGridNode(graph_type &graph,
 					    int row, 
 					    int col,
@@ -38,9 +44,9 @@ void GraphHelper_AddAllNeighboursToGridNode(graph_type &graph,
       if((i == 0) && (j == 0))
 	continue;
 
-      if(ValidNeighbor(nodeX, nodeY, numCellsX, numCellsY)){
-	Vector2D posNode = graph.GetNode(row*numCellsX+col).Pos();
-	Vector2D posNeighbor = graph.GetNode(nodeY*numCellsX+nodeX).GetPos();
+      if(ValidNeighbour(nodeX, nodeY, numCellsX, numCellsY)){
+	Vector2D posNode = graph.GetNode(row*numCellsX+col).GetPosition();
+	Vector2D posNeighbor = graph.GetNode(nodeY*numCellsX+nodeX).GetPosition();
 
 	double dist = posNode.Distance(posNeighbor);
 
@@ -93,7 +99,8 @@ void GraphHelper_CreateGrid(graph_type &graph,
   /* now to calculate the edges. */
   for(int row = 0; row < numCellsY; ++row)
     for(int col = 0; col < numCellsX; ++col){
-      GraphHelper_AddAllNeighboursToGridNode(graph, row, col, numCellsX, numCellsY);
+      GraphHelper_AddAllNeighboursToGridNode(graph, row, col, 
+					     numCellsX, numCellsY);
     }
 
 }
