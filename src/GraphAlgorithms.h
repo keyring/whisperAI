@@ -26,7 +26,45 @@
 template <class graph_type>
 class Graph_SearchDFS{
 
+ private:
+  enum{
+    VISITED,
+    UNVISITED,
+    NO_PARENT_ASSIGNED
+  };
 
+  typedef typename graph_type::EdgeType Edge;
+  typedef typename graph_type::NodeType Node;
+
+  const graph_type &m_graph;
+  std::vector<int> m_visited;	/* record the index of all visted nodes */
+  std::vector<int> m_route;	/* hold the route taken to the target */
+
+  /* Hold all edges the algorithm has examined. 
+   * IT IS HERE NOT NECESSARY FOR SEARCH, 
+   * JUST PROVIDE THE USER SOME VISUAL EFFECT 
+   */
+  std::vector<const Edge*> m_spanningTree;
+
+  int m_source;
+  int m_target;
+
+  bool m_found;
+
+  bool Search();
+
+ public:
+ Graph_SearchDFS(const graph_type &gaph, int source, int target = -1):
+  m_graph(graph), m_source(source), m_target(target), m_found(false),
+    m_visited(m_graph.GetNumNodes(), UNVISITED),
+    m_route(m_graph.GetNumNodes(), NO_PARENT_ASSIGNED){
+
+    m_found = Search();
+  }
+
+  std::vector<const Edge*> GetSearchTree() const { return m_spanningTree; }
+  bool Found() const { return m_found; }
+  std::list<int> GetPathToTarget() const;
 
 };
 
