@@ -72,6 +72,41 @@ class Graph_SearchDFS{
 template <class graph_type>
 bool Graph_SearchDFS<graph_type>::Search(){
 
+  std::stack<const Edge*> stack;
+
+  Edge Dummy(m_source, m_source, 0);
+
+  stack.push( &Dummy );
+
+  while(!stack.empty()){
+    /* while there are edges in the stack keep searching */
+
+    const Edge* next = stack.top();
+    stack.pop();
+    m_route[next->GetDst()] = next->GetSrc();
+
+    if(next != &Dummy){
+      m_spanningTree.push_back(next);
+    }
+
+    m_visited[next->GetDst()] = VISITED;
+
+    if(next->GetDst() == m_target){
+      return true;
+    }
+
+    graph_type::ConstEdgeIterator constEdgeItr(m_graph, next->GetDst());
+
+    for(const Edge* e = constEdgeItr.begin();
+	!constEdgeItr.end();
+	e = constEdgeItr.next()){
+      if(m_visited[e.GetDst()] == UNVISITED){
+	stack.push(e);
+      }
+    }
+  }
+
+  return false;			/* no path to target */
 }
 
 
