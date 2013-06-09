@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <cassert>
 
+
 class PrecisionTimer{
 
  private:

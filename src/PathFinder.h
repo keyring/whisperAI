@@ -18,6 +18,10 @@
 
 #include "Vector2D.h"
 #include "Utils.h"
+#include "GraphEdge.h"
+#include "GraphNode.h"
+#include "SparseGraph.h"
+#include "GraphAlgorithms.h"
 
 class PathFinder{
 

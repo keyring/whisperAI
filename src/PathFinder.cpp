@@ -7,8 +7,12 @@
 
 #include <iostream>
 
+#include "Constants.h"
 #include "PathFinder.h"
 #include "PrecisionTimer.h"
+#include "GraphUtils.h"
+#include "StreamUtils.h"
+
 
 using namespace std;
 
@@ -27,7 +31,7 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
   RECT rect;
   GetClientRect( hwndMainWindow, &rect );
   m_cxClient = rect.right;
-  m_cyClient = rect.bottom - abs(rectToolbar.bottom - rectToolbar.top) - InfoWindowHeight;
+  m_cyClient = rect.bottom - abs(rectToolbar.bottom - rectToolbar.top) - INFOWINDOWHEIGHT;
 
   m_terrainType.assign( cellsUp * cellsAcross, NORMAL );
 
@@ -269,11 +273,11 @@ void PathFinder::Load( char *filename ){
   load >> m_numCellX;
   load >> m_numCellY;
 
-  CreateGraph(m_numCellY, numCellX);
+  CreateGraph(m_numCellY, m_numCellX);
 
   int terrain;
 
-  for(int t = 0; t < m_numCellX * numCellY; ++t){
+  for(int t = 0; t < m_numCellX * m_numCellY; ++t){
     load >> terrain;
     if(terrain == SOURCE)
       m_sourceCell = t;

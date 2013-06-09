@@ -71,6 +71,12 @@
     <ClInclude Include="src\Wpgdi.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\GraphAlgorithms.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SparseGraph.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="icon1.ico">
