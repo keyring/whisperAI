@@ -332,18 +332,18 @@ std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 
 /* Graph_SearchAStar */
 
-template <class graph_type>
+template <class graph_type class heuristic>
 class Graph_SearchAStar{
 
 
 };
 
-template <class graph_type>
+template <class graph_type class heuristic>
 bool Graph_SearchAStar<graph_type>::Search(){
 
 }
 
-template <class graph_type>
+template <class graph_type class heuristic>
 std::list<int> Graph_SearchAStar<graph_type>::GetPathToTarget() const {
 
 }
