@@ -177,7 +177,7 @@ void PathFinder::PaintTerrain( POINTS p ){
   int x = (int)((double)(p.x)/m_cellWidth);
   int y = (int)((double)(p.y)/m_cellHeight);
   
-  if( (x>m_numCellsX) || (y>m_numCellsY-1) ) return;
+  if( (x>m_numCellsX) || (y>(m_numCellsY-1)) ) return;
   
   m_subTree.clear();
   m_path.clear();
@@ -218,7 +218,7 @@ void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
 
   m_terrainType[cellIndex] = brush;
 
-  if((BRUSH_TYPE)brush == OBSTACLE)
+  if(brush == 1)
     m_graph->RemoveNode(cellIndex);
   else{
     if(!m_graph->IsNodePresent(cellIndex)){
@@ -226,6 +226,7 @@ void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
       int x = cellIndex - (y * m_numCellsY);
 
       m_graph->AddNode(NavGraph::NodeType(cellIndex, Vector2D(x*m_cellWidth + m_cellWidth/2.0, y*m_cellHeight + m_cellHeight/2.0)));
+
       GraphHelper_AddAllNeighboursToGridNode( *m_graph, y, x, m_numCellsX, m_numCellsY );
     }
 

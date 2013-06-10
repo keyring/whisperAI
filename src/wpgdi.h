@@ -115,7 +115,9 @@ class Wpgdi{
 
   void StartDrawing( HDC hdc ){
     /* ALWAYS call this before drawing */
-    assert(m_hdc == NULL);
+    //assert(m_hdc == NULL);
+	  if(m_hdc != NULL)
+		  m_hdc = NULL;
     m_hdc = hdc;
 
     m_oldPen = (HPEN)SelectObject(hdc, m_blackPen);
