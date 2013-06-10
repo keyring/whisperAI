@@ -267,11 +267,47 @@ class Graph_SearchDijkstra{
 
       Search();
     }
+
+  std::vector<const Edge*> GetSPT() const { return m_shortestPathTree; }
+  double GetCostToTarget() const { return m_costToThisNode[m_target]; }
+  double GetCostToNode(unsigned int nd) const { return m_costToThisNode[nd]; }
+
+  std::list<int> GetPathToTarget() const;
 };
 
 template <class graph_type>
 bool Graph_SearchDijkstra<graph_type>::Search(){
 
+  IndexdPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
+
+  pq.insert(m_source);
+
+  while(!pq.empty()){
+
+    int nextClosestNode = pq.Pop();
+    m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextCloseNsode];
+
+    if(nextClosestNode == m_target)
+      return;
+
+    graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, nextClosestNode);
+    for(const Edge *e = ConstEdgeItr.begin();
+	!ConstEdgeItr.end();
+	e=ConstEdgeItr.next()){
+      double newCost = m_costToThisNode[nextClosestNode] + e->GetCost();
+      if(m_searchFrontier[e->GetDst()] == 0){
+	m_costToThisNode[e->GetDst()] = newCost;
+	pq.insert(e->GetDst());
+	m_searchFrontier[e->GetDst()] = e;
+      }
+      else if( (newCost < m_costToThisNode[e->GetDst()]) &&
+	       (m_shortestPathTree[e->GetDst()] == 0) ){
+	m_costToThisNode[e->GetDst()] = newCost;
+	pq.ChangePriority(e->GetDst());
+	m_searchFrontier[e->GetDst()] = e;
+      }
+    }
+  }
 }
 
 template <class graph_type>
