@@ -350,16 +350,86 @@ class Graph_SearchAStar{
   int m_target;
 
   void Search();
+
+ public:
+ Graph_SearchAStar(graph_type &graph, int source, int target):
+  m_graph(graph),
+    m_shortestPathTree(graph.GetNumNodes()),
+    m_shortestPathTree(graph.GetNumNodes()),
+    m_gcosts(graph.GetNumNodes(), 0.0),
+    m_fcosts(graph.GetNumNodes(), 0.0),
+    m_source(source),
+    m_target(target){
+
+      Search();
+    }
+
+  std::vector<const Edge*> GetSPT() const { return m_shortestPathTree; }
+  double GetCostToTarget() const { return m_gcosts[m_target]; }
+
+  std::list<int> GetPathToTarget() const ;
 };
 
 template <class graph_type class heuristic>
-bool Graph_SearchAStar<graph_type>::Search(){
+bool Graph_SearchAStar<graph_type, heuristic>::Search(){
 
+  IndexdPriorityQLow<double> pq(m_fcosts, m_graph.GetNumNodes());
+
+  pq.insert(m_source);
+
+  while(!pq.empty()){
+    int nextClosestNode = pq.Pop();
+
+    m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextClosestNode];
+
+    if(nextClosestNode == m_target)
+      return;
+
+    graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, nextClosestNode);
+    for(const Edge *e = ConstEdgeItr.begin();
+	!ConstEdgeItr.end();
+	e=ConstEdgeItr.next()){
+      double hCost = heuristic::Calculate(m_graph, m_target, e->GetDst());
+      double gCost = m_gcosts[nextClosestNode] + e->GetCost();
+
+      if(m_searchFrontier[e->GetDst()] == NULL){
+	m_fcosts[e->GetDst()] = gCost + hCost;
+	m_gcosts[e->GetDst()] = gCost;
+
+	pq.insert(e->GetDst());
+
+	m_searchFrontier[e->GetDst()] = e;
+      }
+      else if((gCost < m_gcosts[e->GetDst()]) &&
+	      (m_shortestPathTree[e->GetDst()] == NULL)){
+	m_fcosts[e->GetDst()] = gCost + hCost;
+	m_gcosts[e->GetDst()] = gCost;
+
+	pq.ChangePriority(e->GetDst());
+
+	m_searchFrontier[e->GetDst()] = e;
+      }
+    }
+  }
 }
 
 template <class graph_type class heuristic>
 std::list<int> Graph_SearchAStar<graph_type>::GetPathToTarget() const {
 
+  std::list<int> path;
+
+  if(m_target < 0)
+    return path;
+
+  int nd = m_target;
+
+  path.push_front(nd);
+  while((nd != m_source) && (m_shortestPathTree[nd] != NULL)){
+    nd = m_shortestPathTree[nd]->GetSrc();
+    path.push_front(nd);
+  }
+
+  return path;
 }
 
 
