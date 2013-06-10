@@ -65,21 +65,25 @@ public :
   double m_cellWidth;
   double m_cellHeight;
 
-  int m_numCellX;
-  int m_numCellY;
+  int m_numCellsX;
+  int m_numCellsY;
 
+  //local record of the client area
   int m_cxClient;
   int m_cyClient;
 
   int m_sourceCell;
   int m_targetCell;
 
+  //flags to indicate if the start and finish points have been added
   bool m_start;
   bool m_finish;
 
+  //should the graph(nodes and edges) and tile outlines be rendered?
   bool m_showGraph;
   bool m_showTiles;
 
+  //holds the time taken for the currently used algorithm to complete
   double m_timeTaken;
 
   void UpdateAlgorithm();
@@ -94,8 +98,8 @@ public:
 	       m_showTiles(true),
 	       m_cellWidth(0.0),
 	       m_cellHeight(0.0),
-	       m_numCellX(0),
-	       m_numCellY(0),
+	       m_numCellsX(0),
+	       m_numCellsY(0),
 	       m_timeTaken(0.0),
 	       m_currentTerrainBrush(NORMAL),
 	       m_sourceCell(0),

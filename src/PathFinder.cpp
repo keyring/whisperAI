@@ -30,14 +30,14 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 
   m_terrainType.assign( cellsUp * cellsAcross, NORMAL );
 
-  m_numCellX = cellsAcross;
-  m_numCellY = cellsUp;
+  m_numCellsX = cellsAcross;
+  m_numCellsY = cellsUp;
   m_cellWidth = (double)m_cxClient / (double)cellsAcross;
   m_cellHeight = (double)m_cyClient / (double)cellsUp;
 
-  delete m_graph;
+  delete m_graph;	//delete any old graph
 
-  m_graph = new NavGraph(false);
+  m_graph = new NavGraph(false);	//not a digraph
 
   GraphHelper_CreateGrid( *m_graph, m_cxClient, m_cyClient, cellsUp, cellsAcross );
 
@@ -60,7 +60,7 @@ void PathFinder::PaintTerrain( POINTS p ){
   int x = (int)((double)(p.x)/m_cellWidth);
   int y = (int)((double)(p.y)/m_cellHeight);
 
-  if( (x>m_numCellX) || (y>m_numCellY) ) return;
+  if( (x>m_numCellsX) || (y>m_numCellsY-1) ) return;
 
   m_subTree.clear();
   m_path.clear();
@@ -68,14 +68,14 @@ void PathFinder::PaintTerrain( POINTS p ){
   if( (m_currentTerrainBrush == SOURCE) || (m_currentTerrainBrush == TARGET) ){
     switch(m_currentTerrainBrush){
     case SOURCE:
-      m_sourceCell = y * m_numCellX + x;    break;
+      m_sourceCell = y * m_numCellsX + x;    break;
     case TARGET:
-      m_targetCell = y * m_numCellX + x;    break;
+      m_targetCell = y * m_numCellsX + x;    break;
     }
   }
 
   else{
-    UpdateGraphFromBrush(m_currentTerrainBrush, y * m_numCellX + x);
+    UpdateGraphFromBrush(m_currentTerrainBrush, y * m_numCellsX + x);
   }
 
   UpdateAlgorithm();
@@ -101,15 +101,15 @@ void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
 
   m_terrainType[cellIndex] = brush;
 
-  if(brush = 1)
+  if((BRUSH_TYPE)brush == OBSTACLE)
     m_graph->RemoveNode(cellIndex);
   else{
     if(!m_graph->IsNodePresent(cellIndex)){
-      int y = cellIndex / m_numCellY;
-      int x = cellIndex - (y * m_numCellY);
+      int y = cellIndex / m_numCellsY;
+      int x = cellIndex - (y * m_numCellsY);
 
       m_graph->AddNode(NavGraph::NodeType(cellIndex, Vector2D(x*m_cellWidth + m_cellWidth/2.0, y*m_cellHeight + m_cellHeight/2.0)));
-      GraphHelper_AddAllNeighboursToGridNode( * m_graph, y, x, m_numCellX, m_numCellY );
+      GraphHelper_AddAllNeighboursToGridNode( *m_graph, y, x, m_numCellsX, m_numCellsY );
     }
 
     WeightNavGraphNodeEdges( *m_graph, cellIndex, GetTerrainCost((BRUSH_TYPE)brush) );
@@ -143,9 +143,10 @@ void PathFinder::CreatePathDFS(){
   PrecisionTimer timer;
   timer.Start();
 
+  //do the search
   Graph_SearchDFS<NavGraph> dfs( *m_graph, m_sourceCell, m_targetCell );
 
-  m_timeTaken = timer.TimerElapsed();
+  m_timeTaken = timer.TimeElapsed();
 
   if(dfs.Found()){
     m_path = dfs.GetPathToTarget();
@@ -220,12 +221,12 @@ bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
   int x = (int)((double)(p.x)/m_cellWidth);
   int y = (int)((double)(p.y)/m_cellHeight);
 
-  if((x>m_numCellX) || (y>m_numCellY)){
+  if((x>m_numCellsX) || (y>m_numCellsY)){
     nodeIndex = -1;
     return false;
   }
 
-  nodeIndex = y * m_numCellX + x;
+  nodeIndex = y * m_numCellsX + x;
 
   return true;
 }
@@ -247,8 +248,8 @@ void PathFinder::Save( char *filename ){
   ofstream save(filename);
   assert(save && "PathFinder::Save< bad file >");
 
-  save << m_numCellX << endl;
-  save << m_numCellY << endl;
+  save << m_numCellsX << endl;
+  save << m_numCellsY << endl;
 
   for(unsigned int t = 0; t < m_terrainType.size(); ++t){
     if(t == m_sourceCell)
@@ -265,14 +266,14 @@ void PathFinder::Load( char *filename ){
   ifstream load(filename);
   assert(load && "PathFinder::Load< bad file >");
 
-  load >> m_numCellX;
-  load >> m_numCellY;
+  load >> m_numCellsX;
+  load >> m_numCellsY;
 
-  CreateGraph(m_numCellY, m_numCellX);
+  CreateGraph(m_numCellsY, m_numCellsX);
 
   int terrain;
 
-  for(int t = 0; t < m_numCellX * m_numCellY; ++t){
+  for(int t = 0; t < m_numCellsX * m_numCellsY; ++t){
     load >> terrain;
     if(terrain == SOURCE)
       m_sourceCell = t;
