@@ -11,6 +11,7 @@
 #pragma warning (disable:4786)
 
 #include <windows.h>
+#include <iostream>
 #include <vector>
 #include <fstream>
 #include <string>
@@ -25,6 +26,7 @@
 #include "SparseGraph.h"
 #include "GraphEdge.h"
 #include "GraphNode.h"
+#include "AStarHeuristicPolicies.h"
 #include "GraphAlgorithms.h"
 
 

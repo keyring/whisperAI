@@ -5,8 +5,6 @@
  *                                    --code with Emacs :)
  ****************************************************************************/
 
-#include <iostream>
-
 #include "PathFinder.h"
 
 using namespace std;

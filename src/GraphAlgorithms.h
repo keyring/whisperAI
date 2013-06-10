@@ -19,6 +19,7 @@
 #include <stack>
 
 #include "SparseGraph.h"
+#include "PriorityQueue.h"
 
 
 /* Graph_SearchDFS */
