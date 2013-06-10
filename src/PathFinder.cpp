@@ -63,8 +63,8 @@ void PathFinder::Render(){
   for(int i = 0; i < m_graph->GetNumNodes(); ++i){
     int left = (int)(m_graph->GetNode(i).GetPosition().x - m_cellWidth/2.0);
     int top = (int)(m_graph->GetNode(i).GetPosition().y - m_cellHeight/2.0);
-    int right = (int)(m_graph->GetNode(i).GetPosition().x + m_cellWidth/2.0);
-    int bottom = (int)(m_graph->GetNode(i).GetPosition().y + m_cellHeight/2.0);
+    int right = (int)(1 + m_graph->GetNode(i).GetPosition().x + m_cellWidth/2.0);
+    int bottom = (int)(1 + m_graph->GetNode(i).GetPosition().y + m_cellHeight/2.0);
     
     wpgdi->GreyPen();
     

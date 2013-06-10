@@ -30,15 +30,18 @@ Wpgdi::Wpgdi(){
   m_orangePen = CreatePen( PS_SOLID, 1, COLORS[ORANGE] );
   m_purplePen = CreatePen( PS_SOLID, 1, COLORS[PURPLE] );
   m_brownPen = CreatePen( PS_SOLID, 1, COLORS[BROWN] );
+
   m_darkGreenPen = CreatePen( PS_SOLID, 1, COLORS[DARK_GREEN] );
+
   m_lightBluePen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_BLUE] );
   m_lightGreyPen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_GREY] );
   m_lightPinkPen = CreatePen( PS_SOLID, 1, COLORS[LIGHT_PINK] );
-  m_thickBlackPen = CreatePen( PS_SOLID, 1, COLORS[BLACK] );
-  m_thickWhitePen = CreatePen( PS_SOLID, 1, COLORS[WHITE] );
-  m_thickRedPen = CreatePen( PS_SOLID, 1, COLORS[RED] );
-  m_thickGreenPen = CreatePen( PS_SOLID, 1, COLORS[GREEN] );
-  m_thickBluePen = CreatePen( PS_SOLID, 1, COLORS[BLUE] );
+
+  m_thickBlackPen = CreatePen( PS_SOLID, 2, COLORS[BLACK] );
+  m_thickWhitePen = CreatePen( PS_SOLID, 2, COLORS[WHITE] );
+  m_thickRedPen = CreatePen( PS_SOLID, 2, COLORS[RED] );
+  m_thickGreenPen = CreatePen( PS_SOLID, 2, COLORS[GREEN] );
+  m_thickBluePen = CreatePen( PS_SOLID, 2, COLORS[BLUE] );
 
   m_greenBrush = CreateSolidBrush(COLORS[GREEN]);
   m_redBrush = CreateSolidBrush(COLORS[RED]);

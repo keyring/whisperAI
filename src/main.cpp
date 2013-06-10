@@ -89,7 +89,7 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   tb.hInst = NULL;
   tb.nID = (UINT_PTR)LoadBitmap((HINSTANCE)GetWindowLong( hwndParent, GWL_HINSTANCE ), MAKEINTRESOURCE(IDR_TOOLBAR1));
 
-  SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
+ int idx = SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
 
   TBBUTTON button[numButtons];
 
