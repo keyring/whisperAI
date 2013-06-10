@@ -14,7 +14,7 @@
 #include <string>
 #include <iomanip>
 
-temlate <class T>
+template <class T>
 inline std::string ttos( const T &t, int precision = 2 ){
   /* convert a type to a string */
   std::ostringstream buffer;

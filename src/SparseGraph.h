@@ -23,7 +23,7 @@
 
 
 enum{
-  INVALID_NODE_INDEX = -1;
+  INVALID_NODE_INDEX = -1
 };
 
 

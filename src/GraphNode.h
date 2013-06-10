@@ -16,7 +16,7 @@
 #include "Vector2D.h"
 
 enum {
-  INVALID_NODE_INDEX = -1;
+  INVALID_NODE_INDEX = -1
 };
 
 class GraphNode{

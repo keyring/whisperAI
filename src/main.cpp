@@ -15,10 +15,13 @@
 
 #include "Constants.h"
 #include "PathFinder.h"
+#include "Utils.h"
 #include "WindowUtils.h"
 #include "Wpgdi.h"
 #include "resource.h"
 
+//need to define a custom message so that the backbuffer can be resized to 
+//accomodate the toolbar
 #define UM_TOOLBAR_HAS_BEEN_CREATED (WM_USER + 33)
 
 /*    Globals    */
@@ -66,7 +69,7 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   HWND hwndToolbar = CreateWindowEx( NULL,
 				     TOOLBARCLASSNAME,
 				     (LPSTR)NULL,
-				     WS_CHILD | WS_VISIBLE | CS_BOTTOM,
+				     WS_CHILD | WS_VISIBLE | CCS_BOTTOM,
 				     0, 0,
 				     0, 0,
 				     hwndParent,
@@ -74,8 +77,9 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
 				     hinstmain,
 				     NULL );
 
-  if(!hwndToolbar)
+  if(!hwndToolbar){
     MessageBox( NULL, "Create Toolbar Failed", "ERROR", 0 );
+  }
 
   SendMessage( hwndToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0 );
 
@@ -84,7 +88,7 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   tb.hInst = NULL;
   tb.nID = (UINT_PTR)LoadBitmap((HINSTANCE)GetWindowLong( hwndParent, GWL_HINSTANCE ), MAKEINTRESOURCE(IDR_TOOLBAR1));
 
-  int idx = SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
+  SendMessage( hwndToolbar, TB_ADDBITMAP, numButtons, (LPARAM)&tb );
 
   TBBUTTON button[numButtons];
 
@@ -193,6 +197,8 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   case WM_CREATE:{
     srand((unsigned) time(NULL));
     hdcBackBuffer = CreateCompatibleDC(NULL);
+
+	//get the DC for front buffer
     HDC hdc = GetDC(hwnd);
     
     hBitmap = CreateCompatibleBitmap( hdc,
@@ -266,6 +272,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     hBitmap = CreateCompatibleBitmap( hdc,
 				      rectClientWindow.right,
 				      rectClientWindow.bottom );
+
     hOldBitmap = (HBITMAP)SelectObject(hdcBackBuffer, hBitmap);
 
     ReleaseDC(hwnd, hdc);
@@ -273,7 +280,9 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     break;
 
   case WM_COMMAND:{
+
     switch(wParam){
+
     case ID_BUTTON_STOP:
       g_pathFinder->ChangeBrush( PathFinder::TARGET );      break;
     case ID_BUTTON_START:
@@ -306,6 +315,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
       SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
       break;
+
     case ID_MENU_SAVEAS:
       FileSaveDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
       if(strlen(titlename) > 0)
@@ -319,7 +329,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
     case IDM_VIEW_GRAPH:
       if(GetMenuState(GetMenu(hwnd), IDM_VIEW_GRAPH, MFS_CHECKED) && MF_CHECKED){
-	ChangeMenuState( hwnd, IDM_VIEW_GRAPH, MFS_UNCHEKED );
+	ChangeMenuState( hwnd, IDM_VIEW_GRAPH, MFS_UNCHECKED );
 	g_pathFinder->SwitchGraphOff();
       }
       else{
@@ -327,6 +337,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 	g_pathFinder->SwitchGraphOn();
       }
       break;
+
     case IDM_VIEW_TILES:
       if(GetMenuState(GetMenu(hwnd), IDM_VIEW_TILES, MFS_CHECKED) && MF_CHECKED){
 	ChangeMenuState( hwnd, IDM_VIEW_TILES, MFS_UNCHECKED );
@@ -343,8 +354,11 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   }
 
   case WM_PAINT:{
+
     PAINTSTRUCT ps;
+
     BeginPaint(hwnd, &ps);
+
     BitBlt( hdcBackBuffer, 0, 0, cxClient, cyClient, NULL, NULL, NULL, WHITENESS );
 
     wpgdi->StartDrawing(hdcBackBuffer);
@@ -380,6 +394,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
 
   case WM_DESTROY:{
     SelectObject(hdcBackBuffer, hOldBitmap);
+
     DeleteDC(hdcBackBuffer);
     DeleteObject(hBitmap);
     DeleteObject(hOldBitmap);

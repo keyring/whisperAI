@@ -218,10 +218,10 @@ void PathFinder::CreatePathAStar(){
 
 bool PathFinder::PointToIndex( POINTS p, int &nodeIndex ){
 
-  int x = (int)((double)(p.x)/m_cellWidth);
-  int y = (int)((double)(p.y)/m_cellHeight);
+  int x = (int)((double)(p.x) / m_cellWidth);
+  int y = (int)((double)(p.y) / m_cellHeight);
 
-  if((x>m_numCellsX) || (y>m_numCellsY)){
+  if((x > m_numCellsX) || (y > m_numCellsY)){
     nodeIndex = -1;
     return false;
   }
