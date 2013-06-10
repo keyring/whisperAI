@@ -103,6 +103,7 @@ class Wpgdi{
   void BlackBrush(){if(m_hdc)SelectObject(m_hdc, GetStockObject(BLACK_BRUSH));}
   void WhiteBrush(){if(m_hdc)SelectObject(m_hdc, GetStockObject(WHITE_BRUSH));} 
   void HollowBrush(){if(m_hdc)SelectObject(m_hdc, GetStockObject(HOLLOW_BRUSH));}
+
   void GreenBrush(){if(m_hdc)SelectObject(m_hdc, m_greenBrush);}
   void RedBrush()  {if(m_hdc)SelectObject(m_hdc, m_redBrush);}
   void BlueBrush()  {if(m_hdc)SelectObject(m_hdc, m_blueBrush);}

@@ -217,7 +217,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   }
     break;
 
-	 case UM_TOOLBAR_HAS_BEEN_CREATED:{
+  case UM_TOOLBAR_HAS_BEEN_CREATED:{
     RECT rectToolbar;
     GetWindowRect( g_hwndToolbar, &rectToolbar);
     ToolBarHeight = abs(rectToolbar.bottom - rectToolbar.top);
@@ -312,7 +312,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     case ID_MENU_LOAD:
       FileOpenDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
       if(strlen(titlename) > 0)
-	g_pathFinder->Load(titlename);
+		  g_pathFinder->Load(titlename);
 
       SendMessage( g_hwndToolbar, TB_CHECKBUTTON, (WPARAM)currentSearchButton, (LPARAM)false );
       break;
@@ -320,7 +320,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
     case ID_MENU_SAVEAS:
       FileSaveDlg( hwnd, filename, titlename, "PathFinder Files (*.map)", "map" );
       if(strlen(titlename) > 0)
-	g_pathFinder->Save(titlename);
+		  g_pathFinder->Save(titlename);
       break;
 
     case ID_MENU_NEW:
