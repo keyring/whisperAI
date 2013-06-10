@@ -156,7 +156,22 @@ class Wpgdi{
     }
   }
 
+  void TransparentText() { SetBkMode(m_hdc, TRANSPARENT); }
 
+  void Line(int a, int b, int x, int y){
+
+    MoveToEx(m_hdc, a, b, NULL);
+    LineTo(m_hdc, x, y);
+  }
+
+  void Cross(Vector2d pos, int diameter){
+
+    Line((int)pos.x - diameter, (int)pos.y - diameter,
+	 (int)pos.x + diameter, (int)pos.y + diameter);
+
+    Linr((int)pos.x - diameter, (int)pos.y + diameter,
+	 (int)pos.x + diameter, (int)pos.y - diameter);
+  }
 
 
 
