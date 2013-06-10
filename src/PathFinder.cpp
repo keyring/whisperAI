@@ -50,59 +50,92 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 }
 
 void PathFinder::Render(){
+  
+  wpgdi->TransparentText();
+  
+  // render all the cells
+  for(int i = 0; i < m_graph->GetNumNodes(); ++i){
+    int left = (int)(m_graph->GetNode(i).GetPosition().x - m_cellWidth/2.0);
+    int top = (int)(m_graph->GetNode(i).GetPosition().y - m_cellHeight/2.0);
+    int right = (int)(m_graph->GetNode(i).GetPosition().x + m_cellWidth/2.0);
+    int bottom = (int)(m_graph->GetNode(i).GetPosition().y + m_cellHeight/2.0);
+    
+    wpgdi->GreyPen();
+    
+    switch(m_terrainType[i]){
+    case 0:
+      wpgdi->WhiteBrush();
+      if(!m_showTiles) wpgdi->WhitePen();
+      break;
+      
+    case 1:
+      wpgdi->BlackBrush();
+      if(!m_showTiles) wpgdi->BlackPen();
+      break;
+      
+    case 2:
+      wpgdi->LightBlueBrush();
+      if(!m_showTiles) wpgdi->LightBluePen();
+      break;
+      
+    case 3:
+      wpgdi->BrownBrush();
+      if(!m_showTiles) wpgdi->BrownPen();
+      break;
+      
+    default:
+      wpgdi->WhiteBrush();
+      if(!m_showTiles) wpgdi->WhitePen();
+      break;
+      
+    } // switch
+    
+    if( i == m_targetCell){
+      wpgdi->RedBrush();
+      if(!m_showTiles) wpgdi->RedPen();
+    }
 
-wpgdi->TransparentText();
+    if( i == m_sourceCell){
+      wpgdi->GreenBrush();
+      if(!m_showTiles) wpgdi->GreenPen();
+    }
 
-// render all the cells
-for(int i = 0; i < m_graph->GetNumNodes(); ++i){
-int left = (int)(m_graph->GetNode(i).GetPosition().x - m_cellWidth/2.0);
-int top = (int)(m_graph->GetNode(i).GetPosition().y - m_cellHeight/2.0);
-int right = (int)(m_graph->GetNode(i).GetPosition().x + m_cellWidth/2.0);
-int bottom = (int)(m_graph->GetNode(i).GetPosition().y + m_cellHeight/2.0);
+    wpgdi->Rect(left, top, right, bottom);
 
-wpgdi->GreyPen();
+    if( i == m_targetCell){
+      wpgdi->ThickBlackPen();
+      wpgdi->Cross(Vector2D(m_graph->GetNode(i).GetPosition().x - 1,
+			    m_graph->GetNode(i).GetPosition().y - 1),
+		   (int)((m_cellWidth *0.6) / 2.0));
+    }
 
-switch(m_terrainType[i]){
- case 0:
-wpgdi->WhiteBrush();
-if(!m_showTiles) wpgdi->WhitePen();
-break;
+    if( i == m_sourceCell){
+      wpgdi->ThickBlackPen();
+      wpgdi->HolowBrush();
+      wpgdi->Rect(left+7, top+7, right-6, bottom-6);
+    }
 
- case 1:
-wpgdi->BlackBrush();
-if(!m_showTiles) wpgdi->BlackPen();
-break;
+    // render dots at the corners of the cells
+    wpgdi->DrawDot(left, top, RGB(0,0,0));
+    wpgdi->DrawDot(right-1, top, RGB(0,0,0));
+    wpgdi->DrawDot(left, bottom-1, RGB(0,0,0));
+    wpgdi->DrawDot(right-1, bottom-1, RGB(0,0,0));
+  }
 
- case 2:
-wpgdi->LightBlueBrush();
-if(!m_showTiles) wpgdi->LightBluePen();
-break;
-
- case 3:
-wpgdi->BrownBrush();
-if(!m_showTiles) wpgdi->BrownPen();
-break;
-
- default:
-wpgdi->WhiteBrush();
-if(!m_showTiles) wpgdi->WhitePen();
-break;
-
-} // switch
 
 
 }
 
 void PathFinder::PaintTerrain( POINTS p ){
-
+  
   int x = (int)((double)(p.x)/m_cellWidth);
   int y = (int)((double)(p.y)/m_cellHeight);
-
+  
   if( (x>m_numCellsX) || (y>m_numCellsY-1) ) return;
-
+  
   m_subTree.clear();
   m_path.clear();
-
+  
   if( (m_currentTerrainBrush == SOURCE) || (m_currentTerrainBrush == TARGET) ){
     switch(m_currentTerrainBrush){
     case SOURCE:
