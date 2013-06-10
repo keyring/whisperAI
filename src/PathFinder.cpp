@@ -122,8 +122,48 @@ void PathFinder::Render(){
     wpgdi->DrawDot(right-1, bottom-1, RGB(0,0,0));
   }
 
+  // draw the graph nodes and edges if required.
+  if(m_showGraph){
+    // false means do not draw node IDs
+    GraphHelper_DrawUsingGDI<NavGraph>(*m_graph, Wpgdi::LIGHT_GREY, false);
+  }
 
+  // draw any tree retrieved from the algorithms
+  wpgdi->RedPen();
+  for(unsigned int e = 0; e < m_subTree.size(); ++e){
+    if(m_subTree[e]){
+      Vector2D src = m_graph->GetNode(m_subTree[e]->GetSrc()).GetPosition();
+      Vector2D dst = m_graph->GetNode(m_subTree[e]->GetDst()).GetPosition();
 
+      wpgdi->Line(src, dst);
+    }
+  }
+
+  // draw the path
+  if(m_path.size() > 0){
+    wpgdi->ThickBluePen();
+
+    std::list<int>::iterator it = m_path.begin();
+    std::list<int>::iterator nxt = it;
+    ++nxt;
+
+    for(it; nxt != m_path.end(); ++it, ++nxt){
+      wpgdi->Line(m_graph->GetNode(*it).GetPosition(),
+		  m_graph->GetNode(*nxt).GetPosition());
+    }
+  }
+
+  if(m_timeTaken){
+    // draw time taken to complete algorithm
+    string time = ttos(m_timeTaken, 8);
+    sting s = "Time Elapsed for " + GetNameOfCurrentSearchAlgorithm() + " is " + time;
+    wpgdi->TextAtPos(1, m_cyClient+1, s);
+  }
+
+  // display the tota cost if appropriate
+  if(m_current == ASTAR || m_currentAlgorithm == DIJKSTRA){
+    wpgdi->TextAtPos(m_cxClient-110, m_cyClient+1, "Cost is " + ttos(m_costToTarget));
+  }
 }
 
 void PathFinder::PaintTerrain( POINTS p ){
