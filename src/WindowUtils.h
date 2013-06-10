@@ -16,6 +16,11 @@
 void ChangeMenuState( HWND hwnd, UINT menuItem, UINT state );
 void CheckMenuItemAppropriately( HWND hwnd, UINT menuItem, bool b );
 
+inline void RedrawWindow(HWND hwnd, bool RedrawBackGround = true){
+	InvalidateRect(hwnd, NULL, RedrawBackGround);
+	UpdateWindow(hwnd);
+}
+
 inline void RedrawWindowRect( HWND hwnd, bool redrawBackground, RECT &redrawArea ){
   
   InvalidateRect( hwnd, &redrawArea, redrawBackground );

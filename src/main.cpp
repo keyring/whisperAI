@@ -171,7 +171,7 @@ HWND CreateToolbar( HWND hwndParent, HINSTANCE hinstmain ){
   button[10].dwData    = NULL;
   button[10].iString   = NULL;
 
-  SendMessage( hwndParent, TB_ADDBUTTONS, (WPARAM)numButtons, (LPARAM)(LPTBBUTTON)&button );
+  SendMessage( hwndToolbar, TB_ADDBUTTONS, (WPARAM)numButtons, (LPARAM)(LPTBBUTTON)&button );
 
   return hwndToolbar;
 }
@@ -217,6 +217,37 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
   }
     break;
 
+	 case UM_TOOLBAR_HAS_BEEN_CREATED:{
+    RECT rectToolbar;
+    GetWindowRect( g_hwndToolbar, &rectToolbar);
+    ToolBarHeight = abs(rectToolbar.bottom - rectToolbar.top);
+
+    rectClientWindow.left = 0;
+    rectClientWindow.right = CLIENTWIDTH;
+    rectClientWindow.top = 0;
+    rectClientWindow.bottom = CLIENTHEIGHT + INFOWINDOWHEIGHT;
+
+    ResizeToCorrectClientArea( hwnd, ToolBarHeight, rectClientWindow );
+
+    SendMessage( g_hwndToolbar, WM_SIZE, wParam, lParam );
+
+    GetClientRect( hwnd, &rectClientWindow );
+    rectClientWindow.bottom = CLIENTHEIGHT - ToolBarHeight - 1;
+
+    hdcBackBuffer = CreateCompatibleDC(NULL);
+
+    HDC hdc = GetDC(hwnd);
+
+    hBitmap = CreateCompatibleBitmap( hdc,
+				      rectClientWindow.right,
+				      rectClientWindow.bottom );
+
+    hOldBitmap = (HBITMAP)SelectObject(hdcBackBuffer, hBitmap);
+
+    ReleaseDC(hwnd, hdc);
+  }
+    break;
+
   case WM_KEYUP:{
 
     switch(wParam){
@@ -247,38 +278,7 @@ LRESULT CALLBACK WindowProc( HWND hwnd,
       break;
     }
   }
-    break;
-
-  case UM_TOOLBAR_HAS_BEEN_CREATED:{
-    RECT rectToolbar;
-    GetWindowRect( g_hwndToolbar, &rectToolbar);
-    ToolBarHeight = abs(rectToolbar.bottom - rectToolbar.top);
-
-    rectClientWindow.left = 0;
-    rectClientWindow.right = CLIENTWIDTH;
-    rectClientWindow.top = 0;
-    rectClientWindow.bottom = CLIENTHEIGHT + INFOWINDOWHEIGHT;
-
-    ResizeToCorrectClientArea( hwnd, ToolBarHeight, rectClientWindow );
-
-    SendMessage( g_hwndToolbar, WM_SIZE, wParam, lParam );
-
-    GetClientRect( hwnd, &rectClientWindow );
-    rectClientWindow.bottom = CLIENTHEIGHT - ToolBarHeight - 1;
-
-    hdcBackBuffer = CreateCompatibleDC(NULL);
-
-    HDC hdc = GetDC(hwnd);
-
-    hBitmap = CreateCompatibleBitmap( hdc,
-				      rectClientWindow.right,
-				      rectClientWindow.bottom );
-
-    hOldBitmap = (HBITMAP)SelectObject(hdcBackBuffer, hBitmap);
-
-    ReleaseDC(hwnd, hdc);
-  }
-    break;
+   // break;
 
   case WM_COMMAND:{
 
