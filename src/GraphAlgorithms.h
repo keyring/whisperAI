@@ -335,7 +335,21 @@ std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 template <class graph_type class heuristic>
 class Graph_SearchAStar{
 
+ private:
+  typedef typename graph_type::EdgeType Edge;
 
+  const graph_type &m_graph;
+  
+  std::vector<double> m_gcosts;
+  std::vector<double> m_fcosts;
+
+  std::vector<const Edge*> m_shortestPathTree;
+  std::vector<const Edge*> m_searchFrontier;
+
+  int m_source;
+  int m_target;
+
+  void Search();
 };
 
 template <class graph_type class heuristic>
