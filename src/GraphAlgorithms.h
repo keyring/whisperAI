@@ -434,5 +434,65 @@ std::list<int> Graph_SearchAStar<graph_type>::GetPathToTarget() const {
 }
 
 
+/* Graph_MinSpanningTree */
+
+template <class graph_type>
+class Graph_MinSpanningTree{
+ private:
+  typedef typename graph_type::EdgeType Edge;
+  const graph_type &m_graph;
+
+  std::vector<double> m_costToThisNode;
+  std::vector<const Edge*> m_spanningTree;
+  std::vector<const Edge*> m_frings;
+
+  void Search(const int source){
+
+    IndexdPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
+    pq.insert(source);
+
+    while(!pq.empty()){
+      int best = pq.pop();
+      m_spanningTree[best] = m_frings[best];
+      graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, best);
+      for(const Edge *E = ConstEdgeItr.begin();
+	  !ConstEdgeItr.end();
+	  e=ConstEdgeItr.next()){
+	double priority = e->GetCost();
+	if(m_frings[e->GetDst()] == 0){
+	  m_costToThisNode[e->GetDst()] = priority;
+	  pq.insert(e->GetDst());
+	  m_frings[e->GetDst()] = e;
+	}
+	else if((priority < m_costToThisNode[e->GetDst()]) && (m_spanningTree[e->GetDst()] == 0)){
+	  m_costToThisNode[e->GetDst()] = priority;
+	  pq.ChangePriority(e->GetDst());
+	  m_frings[e->GetDst()] = e;
+	}
+      }
+    }
+  }
+
+ public:
+ Graph_MinSpanningTree(graph_type &graph, int source = -1):
+  m_graph(graph),
+    m_spanningTree(graph.GetNumNodes()),
+    m_frings(graph.GetNumNodes()),
+    m_costToThisNode(graph.GetNumNodes(), -1){
+
+    if(source < 0){
+      for(int i = 0; i < graph.GetNumNodes(); ++i){
+	if(m_spanningTree[i] == 0){
+	  Search(i);
+	}
+      }
+    }
+    else{
+      Search(source);
+    }
+  }
+
+  std::vector<const Edge*> GetSpanningTree() const { return m_spanningTree; }
+};
 
 #endif	/* __GRAPHALGORITHMS_H__ */
