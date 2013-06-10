@@ -55,7 +55,10 @@ class Graph_SearchDFS{
 
  public:
  Graph_SearchDFS(const graph_type &gaph, int source, int target = -1):
-  m_graph(graph), m_source(source), m_target(target), m_found(false),
+  m_graph(graph),
+    m_source(source),
+    m_target(target),
+    m_found(false),
     m_visited(m_graph.GetNumNodes(), UNVISITED),
     m_route(m_graph.GetNumNodes(), NO_PARENT_ASSIGNED){
 
@@ -157,7 +160,10 @@ class Graph_SearchBFS{
 
  public:
  Graph_SearchBFS(const graph_type &graph, int source, int target-1):
-  m_graph(graph), m_source(source), m_target(target), m_found(false),
+  m_graph(graph),
+    m_source(source),
+    m_target(target),
+    m_found(false),
     m_visited(m_graph.GetNumNodes(), UNVISITED),
     m_route(m_graph.GetNumNodes(), NO_PARENT_ASSIGNED){
 
@@ -236,7 +242,31 @@ std::list<int> Graph_SearchBFS<graph_type>::GetPathToTarget() const {
 template <class graph_type>
 class Graph_SearchDijkstra{
 
+ private:
+  typedef typename graph_type::EdgeType Edge;
 
+  const graph_type &m_graph;
+
+  std::vector<const Edge*> m_shortestPathTree;
+  std::vectot<const Edge*> m_searchFrontier;
+  std::vector<double> m_costToThisNode;
+
+  int m_source;
+  int m_target;
+
+  void Search();
+
+ public:
+ Graph_SearchDijkstra(const graph_type &graph, int source, int target = -1):
+  m_graph(graph),
+    m_shortestPathTree(graph.GetNumNodes()),
+    m_searchFrontier(graph.GetNumNodes()),
+    m_costToThisNode(graphs.GetNumNodes()),
+    m_source(source),
+    m_target(target){
+
+      Search();
+    }
 };
 
 template <class graph_type>
