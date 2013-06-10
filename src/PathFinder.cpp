@@ -51,6 +51,46 @@ void PathFinder::CreateGraph( int cellsUp, int cellsAcross ){
 
 void PathFinder::Render(){
 
+wpgdi->TransparentText();
+
+// render all the cells
+for(int i = 0; i < m_graph->GetNumNodes(); ++i){
+int left = (int)(m_graph->GetNode(i).GetPosition().x - m_cellWidth/2.0);
+int top = (int)(m_graph->GetNode(i).GetPosition().y - m_cellHeight/2.0);
+int right = (int)(m_graph->GetNode(i).GetPosition().x + m_cellWidth/2.0);
+int bottom = (int)(m_graph->GetNode(i).GetPosition().y + m_cellHeight/2.0);
+
+wpgdi->GreyPen();
+
+switch(m_terrainType[i]){
+ case 0:
+wpgdi->WhiteBrush();
+if(!m_showTiles) wpgdi->WhitePen();
+break;
+
+ case 1:
+wpgdi->BlackBrush();
+if(!m_showTiles) wpgdi->BlackPen();
+break;
+
+ case 2:
+wpgdi->LightBlueBrush();
+if(!m_showTiles) wpgdi->LightBluePen();
+break;
+
+ case 3:
+wpgdi->BrownBrush();
+if(!m_showTiles) wpgdi->BrownPen();
+break;
+
+ default:
+wpgdi->WhiteBrush();
+if(!m_showTiles) wpgdi->WhitePen();
+break;
+
+} // switch
+
+
 }
 
 void PathFinder::PaintTerrain( POINTS p ){
