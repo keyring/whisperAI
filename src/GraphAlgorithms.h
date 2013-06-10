@@ -313,6 +313,20 @@ bool Graph_SearchDijkstra<graph_type>::Search(){
 template <class graph_type>
 std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 
+  std::list<int> path;
+
+  if(m_target < 0)
+    return path;
+
+  int nd = m_target;
+  path.push_front(nd);
+
+  while((nd != m_source) && (m_shortestPathTree[nd] != 0)){
+    nd = m_shortestPathTree[nd]->GetSrc();
+    path.push_front(nd);
+  }
+
+  return path;
 }
 
 
