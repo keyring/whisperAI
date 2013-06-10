@@ -132,5 +132,34 @@ void WeightNavGraphNodeEdges(graph_type &graph, int node, double weight){
   }
 }
 
+template <class graph_type>
+void GraphHelper_DrawUsingGDI(const graph_type &graph, int color, bool drawNodeIDs = false){
+
+  if(graph.GetNumNodes() == 0)
+    return;
+
+  wpgdi->SetPenColor(color);
+
+  /* draw the nodes */
+  graph_type::ConstNodeIterator nodeItr(graph);
+  for(const graph_type::NodeType *n = nodeItr.begin();
+      !nodeItr.end();
+      n = nodeItr.next()){
+    wpgdi->Circle(n->GetPosition(), 2);
+    if(drawNodeIDs){
+      wpgdi->TextColor(200, 200, 200);
+      wpgdi->TextAtPos((int)n->GetPosition().x+5, (int)n->GetPosition().y-5,
+		       ttos(n->GetIndex()));
+    }
+
+    graph_type::ConstEdgeIterator edgeItr(graph, n->GetIndex());
+    for(const graph_type::EdgeType *e = edgeItr.begin();
+	!edgeItr.end();
+	e = edgeItr.next()){
+      wpgdi->Line(n->GetPosition(), graph.GetNode(e->GetDst()).GetPosition());
+    }
+  }
+}
+
 
 #endif	/* __GRAPHUTILES_H__ */

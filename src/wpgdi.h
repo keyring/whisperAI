@@ -158,21 +158,56 @@ class Wpgdi{
 
   void TransparentText() { SetBkMode(m_hdc, TRANSPARENT); }
 
-  void Line(int a, int b, int x, int y){
+  void TextAtPos(int x, int y, const std::string &s){
+    TextOut(m_hdc, x, y, s.c_str(), (int)s.size());
+  }
 
+  void TextAtPos(duble x, double y, const std::string &s){
+    TextOut(m_hdc, (int)x, (int)y, s.c_str(), (int)s.size());
+  }
+
+  void TextAtPos(Vector2D pos, const std::string &s){
+    TextOut(m_hdc, (int)pos.x, (int)pos.y, s.c_str(), (int)s.size());
+  }
+
+  void TextColor(int color){
+    assert(color < NUMCOLORS);
+    SetTextColor(m_hdc, COLORS[color]);
+  }
+
+  void TextColor(int r, int g, int b){
+    SetTextColor(m_hdc, RGB(r,g,b));
+  }
+		
+
+  void Line(int a, int b, int x, int y){
     MoveToEx(m_hdc, a, b, NULL);
     LineTo(m_hdc, x, y);
   }
 
-  void Cross(Vector2d pos, int diameter){
+  void Line(Vector2D src, Vector2D dst){
+    MoveToEx(m_hdc, (int)src.x, (int)src.y, NULL);
+    LineTo(m_hdc, (int)dst.x, (int)dst.y);
+  }
 
+  void Cross(Vector2d pos, int diameter){
     Line((int)pos.x - diameter, (int)pos.y - diameter,
 	 (int)pos.x + diameter, (int)pos.y + diameter);
-
-    Linr((int)pos.x - diameter, (int)pos.y + diameter,
+    Line((int)pos.x - diameter, (int)pos.y + diameter,
 	 (int)pos.x + diameter, (int)pos.y - diameter);
   }
 
+  void Rect(int left, int top, int right, int bot){
+    Rectangle(m_hdc. left, top, right, bot);
+  }
+
+  void DrawDot(int x, int y, COLORREF color){
+    SetPixel(m_hdc, x, y, color);
+  }
+
+  void DrawDot(Vector2D pos, COLORREF color){
+    SetPixel(m_hdc, (int)pos.x, (int)pos.y, color);
+  }
 
 
 };
