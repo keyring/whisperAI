@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-#include "resource.h"
+#include "src/resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ BEGIN
             VALUE "FileDescription", "Path Finder"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "PathFinder"
-            VALUE "LegalCopyright", "Copyright © 2013"
+            VALUE "LegalCopyright", "Copyright ?2013"
             VALUE "OriginalFilename", "PathFinder.exe"
             VALUE "ProductName", "PathFinder"
             VALUE "ProductVersion", "1, 0, 0, 1"

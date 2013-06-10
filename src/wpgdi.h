@@ -17,12 +17,10 @@
 #include <vector>
 #include <cassert>
 
-#include "Vector2d.h"
+#include "Vector2D.h"
 
-#define wpgdi Wpgdi::Instance();
-
-const int NUMCOLORS = 15;
-const COLORREF COLORS[NUMCOLORS] = {
+const int NUMCOLOR = 15;
+const COLORREF COLORS[NUMCOLOR] = {
   RGB( 255, 0, 0 ),
   RGB( 0, 0, 255 ),
   RGB( 0, 255, 0 ),
@@ -41,10 +39,12 @@ const COLORREF COLORS[NUMCOLORS] = {
 };
 
 
+#define wpgdi Wpgdi::Instance()
+
 class Wpgdi{
 
  public:
-  int GetNumPenColors() const { return NUMCOLORS; }
+  int GetNumPenColors() const { return NUMCOLOR; }
 
   enum{
     RED, BLUE, GREEN, BLACK, PINK, GREY, YELLOW, ORANGE, PURPLE,BROWN,
@@ -127,7 +127,7 @@ class Wpgdi{
 
   void StopDrawing( HDC hdc ){
     /* ALWAYS call this after drawing */
-    assert(hdc ==NULL);
+    assert(hdc != NULL);
 
     SelectObject(hdc, m_oldPen);
     SelectObject(hdc, m_oldBrush);
@@ -137,7 +137,7 @@ class Wpgdi{
 
   void SetPenColor( int color ){
 
-    assert(color < NUMCOLORS);
+    assert(color < NUMCOLOR);
     switch(color){
     case BLACK: BlackPen(); return;
     case WHITE: WhitePen(); return;
@@ -162,7 +162,7 @@ class Wpgdi{
     TextOut(m_hdc, x, y, s.c_str(), (int)s.size());
   }
 
-  void TextAtPos(duble x, double y, const std::string &s){
+  void TextAtPos(double x, double y, const std::string &s){
     TextOut(m_hdc, (int)x, (int)y, s.c_str(), (int)s.size());
   }
 
@@ -171,7 +171,7 @@ class Wpgdi{
   }
 
   void TextColor(int color){
-    assert(color < NUMCOLORS);
+    assert(color < NUMCOLOR);
     SetTextColor(m_hdc, COLORS[color]);
   }
 
@@ -190,7 +190,7 @@ class Wpgdi{
     LineTo(m_hdc, (int)dst.x, (int)dst.y);
   }
 
-  void Cross(Vector2d pos, int diameter){
+  void Cross(Vector2D pos, int diameter){
     Line((int)pos.x - diameter, (int)pos.y - diameter,
 	 (int)pos.x + diameter, (int)pos.y + diameter);
     Line((int)pos.x - diameter, (int)pos.y + diameter,
@@ -198,7 +198,7 @@ class Wpgdi{
   }
 
   void Rect(int left, int top, int right, int bot){
-    Rectangle(m_hdc. left, top, right, bot);
+    Rectangle(m_hdc, left, top, right, bot);
   }
 
   void Rect(double left, int top, double right, int bot){

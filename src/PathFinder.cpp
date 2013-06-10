@@ -6,6 +6,12 @@
  ****************************************************************************/
 
 #include "PathFinder.h"
+#include "Wpgdi.h"
+#include "Constants.h"
+#include "GraphUtils.h"
+#include "PrecisionTimer.h"
+#include "AStarHeuristicPolicies.h"
+#include "StreamUtils.h"
 
 using namespace std;
 
@@ -111,7 +117,7 @@ void PathFinder::Render(){
 
     if( i == m_sourceCell){
       wpgdi->ThickBlackPen();
-      wpgdi->HolowBrush();
+      wpgdi->HollowBrush();
       wpgdi->Rect(left+7, top+7, right-6, bottom-6);
     }
 
@@ -156,12 +162,12 @@ void PathFinder::Render(){
   if(m_timeTaken){
     // draw time taken to complete algorithm
     string time = ttos(m_timeTaken, 8);
-    sting s = "Time Elapsed for " + GetNameOfCurrentSearchAlgorithm() + " is " + time;
+    string s = "Time Elapsed for " + GetNameOfCurrentSearchAlgorithm() + " is " + time;
     wpgdi->TextAtPos(1, m_cyClient+1, s);
   }
 
   // display the tota cost if appropriate
-  if(m_current == ASTAR || m_currentAlgorithm == DIJKSTRA){
+  if(m_currentAlgorithm == ASTAR || m_currentAlgorithm == DIJKSTRA){
     wpgdi->TextAtPos(m_cxClient-110, m_cyClient+1, "Cost is " + ttos(m_costToTarget));
   }
 }
@@ -316,7 +322,7 @@ void PathFinder::CreatePathAStar(){
   PrecisionTimer timer;
   timer.Start();
 
-  Graph_SearchAStar<NavGraph, Heuristic> AStar( *m_graph, m_sourceCell, m_targetCell );
+  Graph_SearchAStar<NavGraph, Heuristic_Euclid> AStar( *m_graph, m_sourceCell, m_targetCell );
 
   m_timeTaken = timer.TimeElapsed();
 

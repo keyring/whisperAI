@@ -82,13 +82,16 @@
     <ClCompile Include="src\Wpgdi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AStarHeuristicPolicies.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\GraphAlgorithms.h" />
     <ClInclude Include="src\GraphEdge.h" />
     <ClInclude Include="src\GraphNode.h" />
     <ClInclude Include="src\GraphUtils.h" />
+    <ClInclude Include="src\NodeTypeEnum.h" />
     <ClInclude Include="src\PathFinder.h" />
     <ClInclude Include="src\PrecisionTimer.h" />
+    <ClInclude Include="src\PriorityQueue.h" />
     <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\SparseGraph.h" />
     <ClInclude Include="src\StreamUtils.h" />

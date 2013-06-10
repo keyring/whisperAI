@@ -20,53 +20,49 @@
 
 #include "Vector2D.h"
 #include "Utils.h"
-
-
-enum{
-  INVALID_NODE_INDEX = -1
-};
+#include "NodeTypeEnum.h"
 
 
 template <class node_type, class edge_type>
-  class SparseGraph{
-
- public:
+class SparseGraph{
+  
+public:
   typedef edge_type EdgeType;
   typedef node_type NodeType;
-
+  
   typedef std::vector<node_type> NodeVector;
   typedef std::list<edge_type> EdgeList;
   typedef std::vector<EdgeList> EdgeListVector;
-
- private:
+  
+private:
   NodeVector m_nodes;
   EdgeListVector m_edges;
   bool m_digraph;
   int m_nextNodeIndex;
-
+  
   bool IsUniqueEdge( int src, int dst ) const;
   void CullInvalidEdges();
-
- public:
- SparseGraph(bool digraph) : m_nextNodeIndex(0), m_digraph(digraph) {}
-
+  
+public:
+  SparseGraph(bool digraph) : m_nextNodeIndex(0), m_digraph(digraph) {}
+  
   const NodeType &GetNode(int index) const;
   NodeType &GetNode(int index);
-
+  
   const EdgeType &GetEdge(int src, int dst) const;
   EdgeType &GetEdge(int src, int dst);
-
+  
   int GetNextFreeNodeIndex() const { return m_nextNodeIndex; }
-
-  int AddNode(Nodetype node);
+  
+  int AddNode(NodeType node);
   void RemoveNode(int node);	/* remove by seting its index to invalidIndex */
-
+  
   void AddEdge(EdgeType edge);
   void RemoveEdge(int src, int dst);
   void SetEdgeCost(int src, int dst, double cost);
-
+  
   int GetNumNodes() const { return m_nodes.size(); }
-
+  
   int GetNumActiveNodes() const {
     int count = 0;
     for(unsigned int n = 0; n < m_nodes.size(); ++n)
@@ -74,7 +70,7 @@ template <class node_type, class edge_type>
 	++count;
     return count;
   }
-
+  
   int GetNumEdges() const{
     int tot = 0;
     for(EdgeListVector::const_iterator curEdge = m_edges.begin();
@@ -84,31 +80,31 @@ template <class node_type, class edge_type>
     }
     return tot;
   }
-
+  
   bool IsDigraph() const { return m_digraph; }
   bool IsEmpty() const { return m_nodes.empty(); }
-
+  
   bool IsNodePresent(int nd)const;
   bool IsEdgePresent(int src, int dst) const;
-
+  
   bool Save(const char *filename) const;
   bool Save(std::ofstream &stream) const;
-
+  
   bool Load(const char *filename);
   bool Load(std::ifstream &stream);
-
+  
   void Clear(){
     m_nextNodeIndex = 0;
     m_nodes.clear();
     m_edges.clear();
   }
-
+  
   void RemoveEdges(){
     for(EdgeListVector::iterator it = m_edges.begin(); it != m_edges.end(); ++it){
       it->clear();
     }
   }
-
+  
   class EdgeIterator{
     
   private:
@@ -117,8 +113,8 @@ template <class node_type, class edge_type>
     const int m_nodeIndex;
     
   public:
-  EdgeIterator(SparseGraph<node_type, edge_type> &graph, int node):
-    G(graph), m_nodeIndex(node){
+    EdgeIterator(SparseGraph<node_type, edge_type> &graph, int node):
+      G(graph), m_nodeIndex(node){
       
       curEdge = G.m_edges[m_nodeIndex].begin();
     }
@@ -141,19 +137,18 @@ template <class node_type, class edge_type>
   };				/* EdgeIterator */
   
   friend class EdgeIterator;
-
-
+  
   
   class ConstEdgeIterator{
-
+    
   private:
-    typename EdgeList::iterator curEdge;
+    typename EdgeList::const_iterator curEdge;
     const SparseGraph<node_type, edge_type> &G;
     const int m_nodeIndex;
     
   public:
-  ConstEdgeIterator(const SparseGraph<node_type, edge_type> &graph, int node):
-    G(graph), m_nodeIndex(node){
+    ConstEdgeIterator(const SparseGraph<node_type, edge_type> &graph, int node):
+      G(graph), m_nodeIndex(node){
       
       curEdge = G.m_edges[m_nodeIndex].begin();
     }
@@ -174,19 +169,18 @@ template <class node_type, class edge_type>
       return (curEdge == G.m_edges[m_nodeIndex].end());
     }
   };				/* ConstEdgeIterator */
-
+  
   friend class ConstEdgeIterator;
-
-
+  
 
   class NodeIterator{
-
+    
   private:
     typename NodeVector::iterator curNode;
     SparseGraph<node_type, edge_type> &G;
-
+    
     void GetNextValidNode(typename NodeVector::iterator &it){
-
+      
       if(curNode == G.m_nodes.end() || it->GetIndex() != INVALID_NODE_INDEX)
 	return;
       while((it->GetIndex() == INVALID_NODE_INDEX)){
@@ -195,18 +189,18 @@ template <class node_type, class edge_type>
 	  break;
       }
     }
-
+    
   public:
-  NodeIterator(SparseGraph<node_type, edge_type> &graph):G(graph){
+    NodeIterator(SparseGraph<node_type, edge_type> &graph):G(graph){
       curNode = G.m_nodes.begin();
     }
-
+    
     NodeType *begin(){
       curNode = G.m_nodes.begin();
       GetNextValidNode(curNode);
       return &(*curNode);
     }
-
+    
     NodeType *next(){
       ++curNode;
       if(end())
@@ -216,25 +210,23 @@ template <class node_type, class edge_type>
 	return &(*curNode);
       }
     }
-
+    
     bool end(){
       return (curNode == G.m_nodes.end());
     }
   };				/* NodeIterator */
-
+  
   friend class NodeIterator;
-
-
-
-
+ 
+  
   class ConstNodeIterator{
 
   private:
-    typename NodeVector::iterator curNode;
+    typename NodeVector::const_iterator curNode;
     const SparseGraph<node_type, edge_type> &G;
-
-    void GetNextValidNode(typename NodeVector::iterator &it){
-
+    
+    void GetNextValidNode(typename NodeVector::const_iterator &it){
+      
       if(curNode == G.m_nodes.end() || it->GetIndex() != INVALID_NODE_INDEX)
 	return;
       while((it->GetIndex() == INVALID_NODE_INDEX)){
@@ -243,18 +235,18 @@ template <class node_type, class edge_type>
 	  break;
       }
     }
-
+    
   public:
-  ConstNodeIterator(const SparseGraph<node_type, edge_type> &graph):G(graph){
+    ConstNodeIterator(const SparseGraph<node_type, edge_type> &graph):G(graph){
       curNode = G.m_nodes.begin();
     }
-
+    
     const NodeType *begin(){
       curNode = G.m_nodes.begin();
       GetNextValidNode(curNode);
       return &(*curNode);
     }
-
+    
     const NodeType *next(){
       ++curNode;
       if(end())
@@ -264,23 +256,22 @@ template <class node_type, class edge_type>
 	return &(*curNode);
       }
     }
-
+    
     bool end(){
       return (curNode == G.m_nodes.end());
     }
   };				/* ConstNodeIterator */
-
+  
   friend class ConstNodeIterator;
-
+  
 };				/* SparseGraph */
 
 
 /* Implement Functions */
 
-
 template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::CullInvalidEdges(){
-
+void SparseGraph<node_type, edge_type>::CullInvalidEdges(){
+  
   for(EdgeListVector::iterator curEdgeList = m_edges.begin();
       curEdgeList != m_edges.end(); ++curEdgeList){
     for(EdgeList::iterator curEdge = (*curEdgeList).begin();
@@ -294,12 +285,12 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
-
-  for(EdgeList::iterator curEdge = m_edges[src].begin();
+bool SparseGraph<node_type, edge_type>::IsUniqueEdge(int src, int dst) const{
+  
+  for(EdgeList::const_iterator curEdge = m_edges[src].begin();
       curEdge != m_edges[src].end();
       ++curEdge){
-    if(curEdge.GetDst() == dst){
+    if(curEdge->GetDst() == dst){
       return false;
     }
   }
@@ -307,94 +298,96 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::IsNodePresent(int nd) const{
+bool SparseGraph<node_type, edge_type>::IsNodePresent(int nd) const{
+  
+  if((nd >= (int)m_nodes.size() || (m_nodes[nd].GetIndex() == INVALID_NODE_INDEX))){
+    return false;
+  }
+  else
+    return true;
+}
 
-      if((nd >= (int)m_nodes.size() || (m_nodes[nd].Index() == INVALID_NODE_INDEX))){
-	return false;
-      }
-      else
+template <class node_type, class edge_type>
+bool SparseGraph<node_type, edge_type>::IsEdgePresent(int src, int dst)const{
+  
+  if(IsNodePresent(src) && IsNodePresent(dst)){
+    for(EdgeList::const_iterator curEdge = m_edges[src].begin();
+	curEdge != m_edges[src].end();
+	++curEdge){
+      if(curEdge->GetDst() == dst)
 	return true;
     }
-
-    template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::IsEdgePresent(int src, int dst)const{
-
-      if(IsNodePresent(src) && IsNodePresent(dst)){
-	for(EdgeList::const_iterator curEdge = m_edges[src].begin();
-	    curEdge != m_edges[src].end();
-	    ++curEdge){
-	  if(curEdge->GetDst() == dst)
-	    return true;
-	}
-	return false;
-      }
-      else
-	return false;
-    }
+    return false;
+  }
+  else
+    return false;
+}
 
 template <class node_type, class edge_type>
-      const NodeType &SparseGraph<node_type, edge_type>::GetNode(int index)const{
-
+const node_type &SparseGraph<node_type, edge_type>::GetNode(int index)const{
+  
   assert((index < (int)m_nodes.size()) && (index >= 0) &&
 	 "<SparseGraph::<GetNode>: invalid index");
-
+  
   return m_nodes[index];
 }
 
 template <class node_type, class edge_type>
-  NodeType &SparseGraph<node_type, edge_type>::GetNode(int index){
-
+node_type &SparseGraph<node_type, edge_type>::GetNode(int index){
+  
   assert((index < (int)m_nodes.size()) && (index >= 0) &&
 	 "<SparseGraph::<GetNode>: invalid index");
-
+  
   return m_nodes[index];
 }
 
 template <class node_type, class edge_type>
-  const EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst)const{
-
+const edge_type &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst)const{
+  
   assert((src < m_nodes.size()) && (src >= 0) &&
 	 m_nodes[src].Index != INVALID_NODE_INDEX &&
 	 "<SparseGraph::GetEdge>: invalid 'src' index");
   assert((dst < m_nodes.size()) && (dst >= 0) &&
 	 m_nodes[dst].Index != INVALID_NODE_INDEX &&
 	 "<SparseGraph::GetEdge>: invalid 'dst' index");
-
+  
   for(EdgeList::const_iterator curEdge = m_edges[src].begin();
       curEdge != m_edges[src].end();
       ++curEdge){
     if(curEdge->GetDst() == dst)
       return *curEdge;
   }
-
+  
   assert(0 && "<SparseGraph::GetEdge>: edge does not exist");
 }
 
 
 template <class node_type, class edge_type>
-  EdgeType &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst){
-
+edge_type &SparseGraph<node_type, edge_type>::GetEdge(int src, int dst){
+  
   assert((src < m_nodes.size()) && (src >= 0) &&
 	 m_nodes[src].Index != INVALID_NODE_INDEX &&
 	 "<SparseGraph::GetEdge>: invalid 'src' index");
   assert((dst < m_nodes.size()) && (dst >= 0) &&
 	 m_nodes[dst].Index != INVALID_NODE_INDEX &&
 	 "<SparseGraph::GetEdge>: invalid 'dst' index");
-
+  
   for(EdgeList::const_iterator curEdge = m_edges[src].begin();
       curEdge != m_edges[src].end();
       ++curEdge){
     if(curEdge->GetDst() == dst)
       return *curEdge;
   }
-
+  
   assert(0 && "<SparseGraph::GetEdge>: edge does not exist");
 }
 
 template <class node_type, class edge_type>
-  int SparseGraph<node_type, edge_type>::AddNode(NodeType node){
-
+int SparseGraph<node_type, edge_type>::AddNode(node_type node){
+  
   if(node.GetIndex() < (int)m_nodes.size()){
+	//make sure the client is not trying to add a node with the same ID as
+    //a currently active node
     assert(m_nodes[node.GetIndex()].GetIndex() == INVALID_NODE_INDEX &&
 	   "<SparseGraph::AddNode>: attempting to add a node with a duplicate ID");
     m_nodes[node.GetIndex()] = node;
@@ -405,17 +398,17 @@ template <class node_type, class edge_type>
 	   "<SparseGraph::AddNode>: invalid index");
     m_nodes.push_back(node);
     m_edges.push_back(EdgeList());
-
+    
     return m_nextNodeIndex;
   }
 }
 
 template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::RemoveNode(int node){
-
+void SparseGraph<node_type, edge_type>::RemoveNode(int node){
+  
   assert(node < (int)m_nodes.size() && "<SparseGraph::RemoveNode>: invalid index");
   m_nodes[node].SetIndex(INVALID_NODE_INDEX);
-
+  
   if(!m_digraph){
     for(EdgeList::iterator curEdge = m_edges[node].begin();
 	curEdge != m_edges[node].end();
@@ -424,7 +417,7 @@ template <class node_type, class edge_type>
 	  curE != m_edges[curEdge->GetDst()].end();
 	  ++curE){
 	if(curE->GetDst() == node){
-	  curE = m_edges[curEdge-GetDst()].erase(curE);
+	  curE = m_edges[curEdge->GetDst()].erase(curE);
 	  break;
 	}
       }
@@ -437,7 +430,7 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::AddEdge(EdgeType edge){
+void SparseGraph<node_type, edge_type>::AddEdge(EdgeType edge){
   
   assert((edge.GetSrc() < m_nextNodeIndex) && (edge.GetDst() < m_nextNodeIndex) &&
 	 "<SparseGraph::AddEdge>: invalid index");
@@ -448,7 +441,7 @@ template <class node_type, class edge_type>
     }
     if(!m_digraph){
       if(IsUniqueEdge(edge.GetDst(), edge.GetSrc())){
-	EdgeType neeEdge = edge;
+	EdgeType newEdge = edge;
 	newEdge.SetSrc(edge.GetSrc());
 	newEdge.SetDst(edge.GetDst());
 	m_edges[edge.GetDst()].push_back(newEdge);
@@ -458,7 +451,7 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::RemoveEdge(int src, int dst){
+void SparseGraph<node_type, edge_type>::RemoveEdge(int src, int dst){
   
   assert((src < m_nodes.size()) && (dst < m_nodes.size()) &&
 	 "<SparseGraph::RemoveEdge>: invalid index");
@@ -486,11 +479,11 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
+void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cost){
   
-  assert((src < m_nodes.size()) && (dst < m_nodes.size()) &&
+  assert(((unsigned)src < m_nodes.size()) && ((unsigned)dst < m_nodes.size()) &&
 	 "<SparseGraph::SetEdgeCost>: invalid index");
-
+  
   for(EdgeList::iterator curEdge = m_edges[src].begin();
       curEdge != m_edges[src].end();
       ++curEdge){
@@ -502,10 +495,10 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::Save(const char *filename) const {
-
+bool SparseGraph<node_type, edge_type>::Save(const char *filename) const {
+  
   std::ofstream out(filename);
-
+  
   if(!out){
     throw std::runtime_error("Can not open file:" + std::string(filename));
     return false;
@@ -514,16 +507,16 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::Save(std::ofstream &stream) const {
+bool SparseGraph<node_type, edge_type>::Save(std::ofstream &stream) const {
   stream << m_nodes.size() << std::endl;
-
+  
   NodeVector::const_iterator curNode = m_nodes.begin();
   for(curNode; curNode != m_nodes.end(); ++curNode){
     stream << *curNode;
   }
-
+  
   stream << GetNumEdges() << std::endl;
-
+  
   for(unsigned int nodeIdx = 0; nodeIdx < m_nodes.size(); ++nodeIdx){
     for(EdgeList::const_iterator curEdge = m_edges[nodeIdx].begin();
 	curEdge != m_edges[nodeIdx].end();
@@ -535,10 +528,10 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::Load(const char *filename){
-
+bool SparseGraph<node_type, edge_type>::Load(const char *filename){
+  
   std::ifstream in(filename);
-
+  
   if(!in){
     throw std::runtime_error("Can not open file: " + std::string(filename));
     return false;
@@ -547,11 +540,11 @@ template <class node_type, class edge_type>
 }
 
 template <class node_type, class edge_type>
-  bool SparseGraph<node_type, edge_type>::Load(std::ifstream &stream){
-
+bool SparseGraph<node_type, edge_type>::Load(std::ifstream &stream){
+  
   Clear();
   int numnodes, numedges;
-
+  
   stream >> numnodes;
   for(int n = 0; n < numnodes; ++n){
     NodeType newNode(stream);
@@ -564,13 +557,13 @@ template <class node_type, class edge_type>
       ++m_nextNodeIndex;
     }
   }
-
+  
   stream >> numedges;
   for(int e = 0; e < numedges; ++e){
     EdgeType nextEdge(stream);
     AddEdge(nextEdge);
   }
-
+  
   return true;
 }
 

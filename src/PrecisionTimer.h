@@ -57,7 +57,7 @@ inline bool PrecisionTimer::ReadyForNextFrame(){
   QueryPerformanceCounter((LARGE_INTEGER*)&m_currentTime);
 
   if(m_currentTime > m_nextTime){
-    m_timeElapsed = (m_curentTime - m_lastTime) * m_timeScale;
+    m_timeElapsed = (m_currentTime - m_lastTime) * m_timeScale;
     m_lastTime = m_currentTime;
 
     m_nextTime = m_currentTime + m_frameTime;

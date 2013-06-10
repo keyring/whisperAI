@@ -20,7 +20,7 @@
 #include "GraphAlgorithms.h"
 
 
-template <class graph_type>
+
 bool ValidNeighbour(int x, int y, int numCellsX, int numCellsY){
 
   return !((x < 0) || (x >= numCellsX) || (y < 0) || (y >= numCellsY));

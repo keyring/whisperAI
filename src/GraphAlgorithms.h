@@ -55,7 +55,7 @@ class Graph_SearchDFS{
   bool Search();
 
  public:
- Graph_SearchDFS(const graph_type &gaph, int source, int target = -1):
+ Graph_SearchDFS(const graph_type &graph, int source, int target = -1):
   m_graph(graph),
     m_source(source),
     m_target(target),
@@ -104,7 +104,7 @@ bool Graph_SearchDFS<graph_type>::Search(){
     for(const Edge* e = constEdgeItr.begin();
 	!constEdgeItr.end();
 	e = constEdgeItr.next()){
-      if(m_visited[e.GetDst()] == UNVISITED){
+      if(m_visited[e->GetDst()] == UNVISITED){
 	stack.push(e);
       }
     }
@@ -160,7 +160,7 @@ class Graph_SearchBFS{
   bool Search();       	/* BFS is similar to DFS but using QUEUE not STACK */
 
  public:
- Graph_SearchBFS(const graph_type &graph, int source, int target-1):
+ Graph_SearchBFS(const graph_type &graph, int source, int target = -1):
   m_graph(graph),
     m_source(source),
     m_target(target),
@@ -213,6 +213,8 @@ bool Graph_SearchBFS<graph_type>::Search(){
       }
     }
   }
+
+  return false;
 }
 
 
@@ -249,7 +251,7 @@ class Graph_SearchDijkstra{
   const graph_type &m_graph;
 
   std::vector<const Edge*> m_shortestPathTree;
-  std::vectot<const Edge*> m_searchFrontier;
+  std::vector<const Edge*> m_searchFrontier;
   std::vector<double> m_costToThisNode;
 
   int m_source;
@@ -262,7 +264,7 @@ class Graph_SearchDijkstra{
   m_graph(graph),
     m_shortestPathTree(graph.GetNumNodes()),
     m_searchFrontier(graph.GetNumNodes()),
-    m_costToThisNode(graphs.GetNumNodes()),
+    m_costToThisNode(graph.GetNumNodes()),
     m_source(source),
     m_target(target){
 
@@ -277,7 +279,7 @@ class Graph_SearchDijkstra{
 };
 
 template <class graph_type>
-bool Graph_SearchDijkstra<graph_type>::Search(){
+void Graph_SearchDijkstra<graph_type>::Search(){
 
   IndexdPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
 
@@ -286,7 +288,7 @@ bool Graph_SearchDijkstra<graph_type>::Search(){
   while(!pq.empty()){
 
     int nextClosestNode = pq.pop();
-    m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextCloseNsode];
+    m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextClosestNode];
 
     if(nextClosestNode == m_target)
       return;
@@ -333,7 +335,7 @@ std::list<int> Graph_SearchDijkstra<graph_type>::GetPathToTarget() const {
 
 /* Graph_SearchAStar */
 
-template <class graph_type class heuristic>
+template <class graph_type, class heuristic>
 class Graph_SearchAStar{
 
  private:
@@ -356,7 +358,7 @@ class Graph_SearchAStar{
  Graph_SearchAStar(graph_type &graph, int source, int target):
   m_graph(graph),
     m_shortestPathTree(graph.GetNumNodes()),
-    m_shortestPathTree(graph.GetNumNodes()),
+    m_searchFrontier(graph.GetNumNodes()),
     m_gcosts(graph.GetNumNodes(), 0.0),
     m_fcosts(graph.GetNumNodes(), 0.0),
     m_source(source),
@@ -371,8 +373,8 @@ class Graph_SearchAStar{
   std::list<int> GetPathToTarget() const ;
 };
 
-template <class graph_type class heuristic>
-bool Graph_SearchAStar<graph_type, heuristic>::Search(){
+template <class graph_type, class heuristic>
+void Graph_SearchAStar<graph_type, heuristic>::Search(){
 
   IndexdPriorityQLow<double> pq(m_fcosts, m_graph.GetNumNodes());
 
@@ -414,8 +416,8 @@ bool Graph_SearchAStar<graph_type, heuristic>::Search(){
   }
 }
 
-template <class graph_type class heuristic>
-std::list<int> Graph_SearchAStar<graph_type>::GetPathToTarget() const {
+template <class graph_type, class heuristic>
+std::list<int> Graph_SearchAStar<graph_type, heuristic>::GetPathToTarget() const {
 
   std::list<int> path;
 

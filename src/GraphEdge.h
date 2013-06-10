@@ -12,9 +12,7 @@
 #include <ostream>
 #include <fstream>
 
-enum{
-  INVALID_NODE_INDEX = -1
-};
+#include "NodeTypeEnum.h"
 
 class GraphEdge{
 
@@ -45,9 +43,9 @@ class GraphEdge{
 
   bool operator==(const GraphEdge &g){
 
-    return ( g.m_src == this.m_src &&
-	     g.m_dst == this.m_dst &&
-	     g.m_cost == this.m_cost );
+    return ( g.m_src == this->m_src &&
+	     g.m_dst == this->m_dst &&
+	     g.m_cost == this->m_cost );
   }
 
   bool operator!=(const GraphEdge &g){
@@ -55,8 +53,8 @@ class GraphEdge{
     return !(*this == g);
   }
 
-  friend std::ostream &operator<<(std::ostream &os, const GraphEdge &g){
-    os << "m_src: " << m_src << "m_dst: " << m_dst << "m_cost: " << m_cost << std::endl;
+  friend std::ostream &operator<<(std::ostream &os, const GraphEdge &e){
+    os << "m_src: " << e.m_src << "m_dst: " << e.m_dst << "m_cost: " << e.m_cost << std::endl;
     return os;
   }
 };
@@ -94,7 +92,7 @@ class NavGraphEdge : public GraphEdge{
   void SetFlags(int value){ m_flags = value; }
 
   int GetId() const { return m_IDofInterEntity; }
-  void SetId(int value){ m_IDofInterEntity = id; }
+  void SetId(int value){ m_IDofInterEntity = value; }
 
   friend std::ostream &operator<<(std::ostream &os, const NavGraphEdge &n){
     os << "m_src: " << n.m_src << "m_dst: " << n.m_dst

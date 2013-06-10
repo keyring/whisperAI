@@ -13,12 +13,13 @@
 #include <CommCtrl.h>
 #pragma comment(lib, "comctl32.lib")
 
+#include "resource.h"
 #include "Constants.h"
 #include "PathFinder.h"
 #include "Utils.h"
 #include "WindowUtils.h"
 #include "Wpgdi.h"
-#include "resource.h"
+
 
 //need to define a custom message so that the backbuffer can be resized to 
 //accomodate the toolbar

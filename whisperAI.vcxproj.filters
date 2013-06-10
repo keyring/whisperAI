@@ -47,9 +47,6 @@
     <ClInclude Include="src\Vector2D.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\resource.h">
-      <Filter>资源文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\WindowUtils.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -76,6 +73,18 @@
     </ClInclude>
     <ClInclude Include="src\SparseGraph.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AStarHeuristicPolicies.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PriorityQueue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NodeTypeEnum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>资源文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

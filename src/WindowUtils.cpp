@@ -20,7 +20,7 @@ void ChangeMenuState( HWND hwnd, UINT menuItem, UINT state ){
   DrawMenuBar(hwnd);
 }
 
-void CheckMenuItemAppropriatrly( HWND hwnd, UINT menuItem, bool b ){
+void CheckMenuItemAppropriately( HWND hwnd, UINT menuItem, bool b ){
 
   if(b)
     ChangeMenuState( hwnd, menuItem, MFS_CHECKED );

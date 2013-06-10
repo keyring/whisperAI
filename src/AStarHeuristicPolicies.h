@@ -21,13 +21,13 @@ class Heuristic_Euclid{
 template <class graph_type>
   static double Calculate(const graph_type &g, int nd1, int nd2){
 
-  return Vec2DDistance(g.GetNode(nd1).GetPosition(), g.GetNode().GePosition());
+  return Vec2DDistance(g.GetNode(nd1).GetPosition(), g.GetNode(nd2).GetPosition());
  }
 };
 
 class Heuristic_Noisy_Euclidian{
  public:
-  Heuristic_Euclidian(){ }
+  Heuristic_Noisy_Euclidian(){ }
 
 template <class graph_type>
   static double Calculate(const graph_type &g, int nd1, int nd2){
