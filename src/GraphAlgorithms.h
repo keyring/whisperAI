@@ -284,7 +284,7 @@ bool Graph_SearchDijkstra<graph_type>::Search(){
 
   while(!pq.empty()){
 
-    int nextClosestNode = pq.Pop();
+    int nextClosestNode = pq.pop();
     m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextCloseNsode];
 
     if(nextClosestNode == m_target)
@@ -378,7 +378,7 @@ bool Graph_SearchAStar<graph_type, heuristic>::Search(){
   pq.insert(m_source);
 
   while(!pq.empty()){
-    int nextClosestNode = pq.Pop();
+    int nextClosestNode = pq.pop();
 
     m_shortestPathTree[nextClosestNode] = m_searchFrontier[nextClosestNode];
 
