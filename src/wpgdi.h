@@ -201,6 +201,10 @@ class Wpgdi{
     Rectangle(m_hdc. left, top, right, bot);
   }
 
+  void Rect(double left, int top, double right, int bot){
+    Rectangle(m_hdc, (int)left, (int)top, (int)right, (int)bot);
+  }
+
   void DrawDot(int x, int y, COLORREF color){
     SetPixel(m_hdc, x, y, color);
   }
@@ -209,6 +213,29 @@ class Wpgdi{
     SetPixel(m_hdc, (int)pos.x, (int)pos.y, color);
   }
 
+  void Circle(Vector2D pos, double radius){
+    Ellipse(m_hdc,
+	    (int)(pos.x - radius),
+	    (int)(pos.y - radius),
+	    (int)(pos.x + radius + 1),
+	    (int)(pos.y + radius + 1));
+  }
+
+  void Circle(double x, double y, double radius){
+    Ellipse(m_hdc,
+	    (int)(x - radius),
+	    (int)(y - radius),
+	    (int)(x + radius + 1),
+	    (int)(y + radius + 1));
+  }
+
+  void Circle(int x, int y, double radius){
+    Ellipse(m_hdc,
+	    (int)(x - radius),
+	    (int)(y - radius),
+	    (int)(x + radius + 1),
+	    (int)(y + radius + 1));
+  }
 
 };
 
