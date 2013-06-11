@@ -474,25 +474,26 @@ void SparseGraph<node_type, edge_type>::RemoveEdge(int src, int dst){
   
   assert((src < m_nodes.size()) && (dst < m_nodes.size()) &&
 	 "<SparseGraph::RemoveEdge>: invalid index");
+
   EdgeList::iterator curEdge;
   
   if(!m_digraph){
     for(curEdge = m_edges[dst].begin();
-	curEdge != m_edges[dst].end();
-	++curEdge){
-      if(curEdge->GetDst() == src){
-	curEdge = m_edges[dst].erase(curEdge);
-	break;
-      }
+		curEdge != m_edges[dst].end();
+		++curEdge){
+			if(curEdge->GetDst() == src){
+				curEdge = m_edges[dst].erase(curEdge);
+				break;
+			}
     }
     
     for(curEdge = m_edges[src].begin();
-	curEdge != m_edges[src].end();
-	++curEdge){
-      if(curEdge->GetDst() == dst){
-	curEdge = m_edges[src].erase(curEdge);
-	break;
-      }
+		curEdge != m_edges[src].end();
+		++curEdge){
+			if(curEdge->GetDst() == dst){
+				curEdge = m_edges[src].erase(curEdge);
+				break;
+			}
     }
   }
 }
@@ -506,10 +507,10 @@ void SparseGraph<node_type, edge_type>::SetEdgeCost(int src, int dst, double cos
   for(EdgeList::iterator curEdge = m_edges[src].begin();
       curEdge != m_edges[src].end();
       ++curEdge){
-    if(curEdge->GetDst() == dst){
-      curEdge->SetCost(cost);
-      break;
-    }
+		  if(curEdge->GetDst() == dst){
+			  curEdge->SetCost(cost);
+			  break;
+		  }
   }
 }
 

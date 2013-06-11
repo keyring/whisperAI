@@ -102,11 +102,11 @@ bool Graph_SearchDFS<graph_type>::Search(){
     graph_type::ConstEdgeIterator constEdgeItr(m_graph, next->GetDst());
 
     for(const Edge* e = constEdgeItr.begin();
-	!constEdgeItr.end();
-	e = constEdgeItr.next()){
-      if(m_visited[e->GetDst()] == UNVISITED){
-	stack.push(e);
-      }
+		!constEdgeItr.end();
+		e = constEdgeItr.next()){
+			if(m_visited[e->GetDst()] == UNVISITED){
+				stack.push(e);
+			}
     }
   }
 
@@ -210,7 +210,7 @@ bool Graph_SearchBFS<graph_type>::Search(){
     for(const Edge *e = ConstEdgeItr.begin();
 		!ConstEdgeItr.end();
 		e=ConstEdgeItr.next()){
-			if(m_visited[e->GetDst()] = UNVISITED){
+			if(m_visited[e->GetDst()] == UNVISITED){
 				q.push(e);
 				m_visited[e->GetDst()] = VISITED;
 			}
