@@ -21,9 +21,9 @@ class GraphEdge{
   double m_cost;
 
  public:
- GraphEdge( int src, int dst, double cost ) : m_src(src), m_dst(dst), m_cost(cost) {}
+ GraphEdge( int src, int dst, double cost ): m_src(src), m_dst(dst), m_cost(cost) {}
  GraphEdge(int src, int dst ):m_src(src), m_dst(dst), m_cost(1.0) {}
- GraphEdge():m_src(INVALID_NODE_INDEX), m_dst(INVALID_NODE_INDEX), m_cost(1.0){}
+ GraphEdge():m_src(INVALID_NODE_INDEX), m_dst(INVALID_NODE_INDEX), m_cost(1.0) {}
 
   GraphEdge(std::ifstream &stream){
     char buffer[50];
@@ -43,9 +43,9 @@ class GraphEdge{
 
   bool operator==(const GraphEdge &g){
 
-    return ( g.m_src == this->m_src &&
+    return g.m_src == this->m_src &&
 	     g.m_dst == this->m_dst &&
-	     g.m_cost == this->m_cost );
+	     g.m_cost == this->m_cost;
   }
 
   bool operator!=(const GraphEdge &g){
@@ -66,7 +66,7 @@ class NavGraphEdge : public GraphEdge{
     NORMAL = 0,
     SWIM = 1 << 0,
     CRAWL = 1 << 1,
-    CREEP = 1 << 2,
+    CREEP = 1 << 3,
     JUMP = 1 << 3,
     FLY = 1 << 4,
     GRAPPLE = 1 << 5,
@@ -85,7 +85,7 @@ class NavGraphEdge : public GraphEdge{
   NavGraphEdge(std::ifstream &stream){
     char buffer[50];
     stream >> buffer >> m_src >> buffer >> m_dst >> buffer >> m_cost;
-    stream >> buffer >>m_flags >> buffer >>m_IDofInterEntity;
+    stream >> buffer >> m_flags >> buffer >> m_IDofInterEntity;
   }
 
   int GetFlags() const { return m_flags; }

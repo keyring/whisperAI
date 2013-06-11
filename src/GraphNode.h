@@ -25,7 +25,7 @@ class GraphNode{
  public:
  GraphNode(): m_index(INVALID_NODE_INDEX) {}
  GraphNode(int index): m_index(index) {}
-  GraphNode(std::ifstream &stream) { char buffer[50]; stream >> buffer >>m_index; }
+  GraphNode(std::ifstream &stream) { char buffer[50]; stream >> buffer >> m_index; }
 
   virtual ~GraphNode(){}
 
@@ -49,9 +49,9 @@ template <class extra_info = void*>
  NavGraphNode(): m_extraInfo(extra_info()) {}
  NavGraphNode( int index, Vector2D pos ): GraphNode(index), m_position(pos), m_extraInfo(extra_info()) {}
 
- NavGraphNode(std::ifstream &stream) : m_extraInfo(extra_info()){
+ NavGraphNode(std::ifstream &stream): m_extraInfo(extra_info()){
    char buffer[50];
-   stream >> buffer >> m_index >> buffer >>m_position.x >> buffer >>m_position.y;
+   stream >> buffer >> m_index >> buffer >> m_position.x >> buffer >> m_position.y;
  }
 
  virtual ~NavGraphNode() {}
