@@ -425,15 +425,15 @@ void SparseGraph<node_type, edge_type>::RemoveNode(int node){
   
   if(!m_digraph){
     for(EdgeList::iterator curEdge = m_edges[node].begin();
-	curEdge != m_edges[node].end();
-	++curEdge){
+		curEdge != m_edges[node].end();
+		++curEdge){
       for(EdgeList::iterator curE = m_edges[curEdge->GetDst()].begin();
-	  curE != m_edges[curEdge->GetDst()].end();
-	  ++curE){
-	if(curE->GetDst() == node){
-	  curE = m_edges[curEdge->GetDst()].erase(curE);
-	  break;
-	}
+		  curE != m_edges[curEdge->GetDst()].end();
+		  ++curE){
+			  if(curE->GetDst() == node){
+				  curE = m_edges[curEdge->GetDst()].erase(curE);
+				  break;
+			  }
       }
     }
     m_edges[node].clear();

@@ -37,18 +37,18 @@ void GraphHelper_AddAllNeighboursToGridNode(graph_type &graph,
    */
   
   for(int i = -1; i < 2; ++i){
-    for(int j = 1; j < 2; ++j){
+    for(int j = -1; j < 2; ++j){
       int nodeX = col + j;
       int nodeY = row + i;
 
       if((i == 0) && (j == 0))
-	continue;
+		  continue;
 
       if(ValidNeighbour(nodeX, nodeY, numCellsX, numCellsY)){
 	Vector2D posNode = graph.GetNode(row*numCellsX+col).GetPosition();
-	Vector2D posNeighbor = graph.GetNode(nodeY*numCellsX+nodeX).GetPosition();
+	Vector2D posNeighbour = graph.GetNode(nodeY*numCellsX+nodeX).GetPosition();
 
-	double dist = posNode.Distance(posNeighbor);
+	double dist = posNode.Distance(posNeighbour);
 
 	graph_type::EdgeType newEdge(row*numCellsX+col,
 				     nodeY*numCellsX+nodeX,

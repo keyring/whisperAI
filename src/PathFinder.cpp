@@ -218,8 +218,9 @@ void PathFinder::UpdateGraphFromBrush( int brush, int cellIndex ){
 
   m_terrainType[cellIndex] = brush;
 
-  if(brush == 1)
+  if(brush == 1){
     m_graph->RemoveNode(cellIndex);
+	  }
   else{
     if(!m_graph->IsNodePresent(cellIndex)){
       int y = cellIndex / m_numCellsY;

@@ -14,13 +14,13 @@
 
 template <class T>
 void Swap(T &a, T &b){
-  T temo = a;
+  T temp = a;
   a = b; 
   b = temp;
 }
 
 template <class T>
-void RecorderUpwards(std::vector<T> &heap, int nd){
+void ReorderUpwards(std::vector<T> &heap, int nd){
 
   while((nd > 1) && (heap[nd/2] < heap[nd])){
     Swap(heap[nd/2], heap[nd]);
@@ -29,7 +29,7 @@ void RecorderUpwards(std::vector<T> &heap, int nd){
 }
 
 template <class T>
-void RecorderDownwards(std::vector<T> &heap, int nd, int heapSize){
+void ReorderDownwards(std::vector<T> &heap, int nd, int heapSize){
 
   while(2 * nd <= heapSize){
     int child = 2 * nd;
@@ -58,7 +58,7 @@ class PriorityQ{
   int m_size;
   int m_maxSize;
 
-  void RecorderUpwards(std::vector<T> &heap, int nd){
+  void ReorderUpwards(std::vector<T> &heap, int nd){
 
     while((nd>1) && (heap[nd/2] < heap[nd])){
       Swap(heap[nd/2], heap[nd]);
@@ -66,21 +66,22 @@ class PriorityQ{
     }
   }
 
-  void RecorderDownwards(std::vector<T> &heap, int nd, int heapSize){
+  void ReorderDownwards(std::vector<T> &heap, int nd, int heapSize){
 
-    while(nd*2 <= heapSize){
-      int child = nd * 2;
+    while(2*nd <= heapSize){
+      int child = 2*nd;
 
-      if((child <heapSize) && (heap[child] < heap[child+1])){
-	  ++child;
-	}
+      if((child < heapSize) && (heap[child] < heap[child+1])){
+		  ++child;
+	  }
 
 	if(heap[nd] < heap[child]){
 	  Swap(heap[child], heap[nd]);
 	  nd = child;
 	}
-	else
+	else{
 	  break;
+	}
     }
   }
 
@@ -98,12 +99,12 @@ class PriorityQ{
 
     ++m_size;
     m_heap[m_size] = item;
-    RecorderUpwards(m_heap, m_size);
+    ReorderUpwards(m_heap, m_size);
   }
 
   T pop(){
     Swap(m_heap[1], m_heap[m_size]);
-    RecorderDownwards(m_heap, 1, m_size-1);
+    ReorderDownwards(m_heap, 1, m_size-1);
     return m_heap[m_size--];
   }
 
@@ -123,7 +124,7 @@ class PriorityQLow{
   int m_size;
   int m_maxSize;
 
-  void RecorderUpwards(std::vector<T> &heap, int nd){
+  void ReorderUpwards(std::vector<T> &heap, int nd){
 
     while((nd>1) && (heap[nd/2] > heap[nd])){
       Swap(heap[nd/2], heap[nd]);
@@ -131,9 +132,9 @@ class PriorityQLow{
     }
   }
 
-  void RecorderDownwards(std::vector<T> &heap, int nd, int heapSize){
+  void ReorderDownwards(std::vector<T> &heap, int nd, int heapSize){
 
-    while(nd *2 <= heapSize){
+    while(2*nd <= heapSize){
       int child = 2 * nd;
 
       if((child < heapSize) && (heap[child] > heap[child+1])){
@@ -141,16 +142,18 @@ class PriorityQLow{
       }
 
       if(heap[nd] > heap[child]){
-	Swap(heap[nd], heap[child]);
+	Swap(heap[child], heap[nd]);
 	nd = child;
       }
-      else
+      else{
 	break;
+		  }
     }
   }
 
  public:
- PriorityQLow(int maxSize) : m_maxSize(maxSize), m_size(0){
+ PriorityQLow(int maxSize): m_maxSize(maxSize), m_size(0){
+
     m_heap.assign(maxSize+1, T());
   }
 
@@ -161,13 +164,13 @@ class PriorityQLow{
     assert(m_size+1 <= m_maxSize);
     ++m_size;
     m_heap[m_size] = item;
-    RecorderUpwards(m_heap, m_size);
+    ReorderUpwards(m_heap, m_size);
   }
 
   T pop(){
 
     Swap(m_heap[1], m_heap[m_size]);
-    RecorderDownwards(m_heap, 1, m_size-1);
+    ReorderDownwards(m_heap, 1, m_size-1);
     return m_heap[m_size--];
   }
 
@@ -181,7 +184,8 @@ class PriorityQLow{
  *
  * The priority in this implementation is the lowest vaued key. */
 template <class T>
-class IndexdPriorityQLow{
+class IndexedPriorityQLow{
+
  private:
   std::vector<T> &m_vecKeys;
   std::vector<int> m_heap;
@@ -199,7 +203,7 @@ class IndexdPriorityQLow{
     m_invHeap[m_heap[b]] = b;
   }
 
-  void RecorderUpwards(int nd){
+  void ReorderUpwards(int nd){
 
     while((nd>1) && (m_vecKeys[m_heap[nd/2]] > m_vecKeys[m_heap[nd]])){
       Swap(nd/2, nd);
@@ -207,25 +211,26 @@ class IndexdPriorityQLow{
     }
   }
 
-  void RecorderDownwards(int nd, int heapSize){
+  void ReorderDownwards(int nd, int heapSize){
 
-    while(nd*2 <= heapSize){
-      int child = nd * 2;
+    while(2*nd <= heapSize){
+      int child = 2 * nd;
 
-      if((child < heapSize) && (m_vecKeys[m_heap[child]] > m_vecKeys[m_heap[child]])){
+      if((child < heapSize) && (m_vecKeys[m_heap[child]] > m_vecKeys[m_heap[child+1]])){
 	++child;
       }
       if(m_vecKeys[m_heap[nd]] > m_vecKeys[m_heap[child]]){
 	Swap(child, nd);
 	nd = child;
       }
-      else
+      else{
 	break;
+		  }
     }
   }
 
  public:
- IndexdPriorityQLow(std::vector<T> &keys, int maxSize):
+ IndexedPriorityQLow(std::vector<T> &keys, int maxSize):
   m_vecKeys(keys),
     m_maxSize(maxSize),
     m_size(0){
@@ -242,19 +247,19 @@ class IndexdPriorityQLow{
     ++m_size;
     m_heap[m_size] = idx;
     m_invHeap[idx] = m_size;
-    RecorderUpwards(m_size);
+    ReorderUpwards(m_size);
   }
 
   int pop(){
 
     Swap(1, m_size);
-    RecorderDownwards(1, m_size-1);
+    ReorderDownwards(1, m_size-1);
     return m_heap[m_size--];
   }
 
   void ChangePriority(const int idx){
 
-    RecorderUpwards(m_invHeap[idx]);
+    ReorderUpwards(m_invHeap[idx]);
   }
 };
 

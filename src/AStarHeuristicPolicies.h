@@ -15,6 +15,7 @@
 #include "Utils.h"
 
 class Heuristic_Euclid{
+
  public:
   Heuristic_Euclid(){ }
 
@@ -32,7 +33,7 @@ class Heuristic_Noisy_Euclidian{
 template <class graph_type>
   static double Calculate(const graph_type &g, int nd1, int nd2){
 
-  return Vec2DDistance(g.GetNode(nd1).GetPosition(), g.GetNode().GePosition()) * RandInRange(0.9f, 1.1f);
+  return Vec2DDistance(g.GetNode(nd1).GetPosition(), g.GetNode().GePosition()) * RandInRange(0.9, 1.1);
  }
 };
 

@@ -123,6 +123,9 @@ std::list<int> Graph_SearchDFS<graph_type>::GetPathToTarget() const {
     return path;
 
   int nd = m_target;
+
+  path.push_front(nd);
+
   while(nd != m_source){
     nd = m_route[nd];
     path.push_front(nd);
@@ -150,7 +153,7 @@ class Graph_SearchBFS{
   const graph_type &m_graph;
   std::vector<int> m_visited;
   std::vector<int> m_route;
-  std::vector<const Edge *> m_spanningTree;
+  std::vector<const Edge*> m_spanningTree;
 
   int m_source;
   int m_target;
@@ -173,7 +176,7 @@ class Graph_SearchBFS{
 
   bool Found() const { return m_found; }
 
-  std::vector<const Edge *> GetSearchTree() const { return m_spanningTree; }
+  std::vector<const Edge*> GetSearchTree() const { return m_spanningTree; }
 
   std::list<int> GetPathToTarget() const;
 };
@@ -181,17 +184,17 @@ class Graph_SearchBFS{
 template <class graph_type>
 bool Graph_SearchBFS<graph_type>::Search(){
 
-  std::queue<const Edge *> queue;
+  std::queue<const Edge*> q;
 
-  const Edge Dummy(m_source, m_source, 0);
+  const Edge Dummy(m_source, m_source, 0.0);
 
-  queue.push( &Dummy );
+  q.push( &Dummy );
 
   m_visited[m_source] = VISITED;
 
-  while(!queue.empty()){
-    const Edge* next = queue.front();
-    queue.pop();
+  while(!q.empty()){
+    const Edge* next = q.front();
+    q.pop();
     m_route[next->GetDst()] = next->GetSrc();
 
     if(next != &Dummy){
@@ -205,12 +208,12 @@ bool Graph_SearchBFS<graph_type>::Search(){
     graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, next->GetDst());
 
     for(const Edge *e = ConstEdgeItr.begin();
-	!ConstEdgeItr.end();
-	e=ConstEdgeItr.next()){
-      if(m_visited[e->GetDst()] = UNVISITED){
-	queue.push(e);
-	m_visited[e->GetDst()] = VISITED;
-      }
+		!ConstEdgeItr.end();
+		e=ConstEdgeItr.next()){
+			if(m_visited[e->GetDst()] = UNVISITED){
+				q.push(e);
+				m_visited[e->GetDst()] = VISITED;
+			}
     }
   }
 
@@ -281,7 +284,7 @@ class Graph_SearchDijkstra{
 template <class graph_type>
 void Graph_SearchDijkstra<graph_type>::Search(){
 
-  IndexdPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
+  IndexedPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
 
   pq.insert(m_source);
 
@@ -295,20 +298,20 @@ void Graph_SearchDijkstra<graph_type>::Search(){
 
     graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, nextClosestNode);
     for(const Edge *e = ConstEdgeItr.begin();
-	!ConstEdgeItr.end();
-	e=ConstEdgeItr.next()){
-      double newCost = m_costToThisNode[nextClosestNode] + e->GetCost();
-      if(m_searchFrontier[e->GetDst()] == 0){
-	m_costToThisNode[e->GetDst()] = newCost;
-	pq.insert(e->GetDst());
-	m_searchFrontier[e->GetDst()] = e;
-      }
-      else if( (newCost < m_costToThisNode[e->GetDst()]) &&
-	       (m_shortestPathTree[e->GetDst()] == 0) ){
-	m_costToThisNode[e->GetDst()] = newCost;
-	pq.ChangePriority(e->GetDst());
-	m_searchFrontier[e->GetDst()] = e;
-      }
+		!ConstEdgeItr.end();
+		e=ConstEdgeItr.next()){
+			double newCost = m_costToThisNode[nextClosestNode] + e->GetCost();
+			if(m_searchFrontier[e->GetDst()] == 0){
+				m_costToThisNode[e->GetDst()] = newCost;
+				pq.insert(e->GetDst());
+				m_searchFrontier[e->GetDst()] = e;
+			}
+			else if( (newCost < m_costToThisNode[e->GetDst()]) &&
+				(m_shortestPathTree[e->GetDst()] == 0) ){
+					m_costToThisNode[e->GetDst()] = newCost;
+					pq.ChangePriority(e->GetDst());
+					m_searchFrontier[e->GetDst()] = e;
+			}
     }
   }
 }
@@ -376,7 +379,7 @@ class Graph_SearchAStar{
 template <class graph_type, class heuristic>
 void Graph_SearchAStar<graph_type, heuristic>::Search(){
 
-  IndexdPriorityQLow<double> pq(m_fcosts, m_graph.GetNumNodes());
+  IndexedPriorityQLow<double> pq(m_fcosts, m_graph.GetNumNodes());
 
   pq.insert(m_source);
 
@@ -390,28 +393,28 @@ void Graph_SearchAStar<graph_type, heuristic>::Search(){
 
     graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, nextClosestNode);
     for(const Edge *e = ConstEdgeItr.begin();
-	!ConstEdgeItr.end();
-	e=ConstEdgeItr.next()){
-      double hCost = heuristic::Calculate(m_graph, m_target, e->GetDst());
-      double gCost = m_gcosts[nextClosestNode] + e->GetCost();
-
-      if(m_searchFrontier[e->GetDst()] == NULL){
-	m_fcosts[e->GetDst()] = gCost + hCost;
-	m_gcosts[e->GetDst()] = gCost;
-
-	pq.insert(e->GetDst());
-
-	m_searchFrontier[e->GetDst()] = e;
-      }
-      else if((gCost < m_gcosts[e->GetDst()]) &&
-	      (m_shortestPathTree[e->GetDst()] == NULL)){
-	m_fcosts[e->GetDst()] = gCost + hCost;
-	m_gcosts[e->GetDst()] = gCost;
-
-	pq.ChangePriority(e->GetDst());
-
-	m_searchFrontier[e->GetDst()] = e;
-      }
+		!ConstEdgeItr.end();
+		e=ConstEdgeItr.next()){
+			double hCost = heuristic::Calculate(m_graph, m_target, e->GetDst());
+			double gCost = m_gcosts[nextClosestNode] + e->GetCost();
+			
+			if(m_searchFrontier[e->GetDst()] == NULL){
+				m_fcosts[e->GetDst()] = gCost + hCost;
+				m_gcosts[e->GetDst()] = gCost;
+				
+				pq.insert(e->GetDst());
+				
+				m_searchFrontier[e->GetDst()] = e;
+			}
+			else if((gCost < m_gcosts[e->GetDst()]) &&
+				(m_shortestPathTree[e->GetDst()] == NULL)){
+					m_fcosts[e->GetDst()] = gCost + hCost;
+					m_gcosts[e->GetDst()] = gCost;
+					
+					pq.ChangePriority(e->GetDst());
+					
+					m_searchFrontier[e->GetDst()] = e;
+			}
     }
   }
 }
@@ -427,7 +430,7 @@ std::list<int> Graph_SearchAStar<graph_type, heuristic>::GetPathToTarget() const
   int nd = m_target;
 
   path.push_front(nd);
-  while((nd != m_source) && (m_shortestPathTree[nd] != NULL)){
+  while((nd != m_source) && (m_shortestPathTree[nd] != 0)){
     nd = m_shortestPathTree[nd]->GetSrc();
     path.push_front(nd);
   }
@@ -440,37 +443,40 @@ std::list<int> Graph_SearchAStar<graph_type, heuristic>::GetPathToTarget() const
 
 template <class graph_type>
 class Graph_MinSpanningTree{
+
  private:
   typedef typename graph_type::EdgeType Edge;
   const graph_type &m_graph;
 
   std::vector<double> m_costToThisNode;
   std::vector<const Edge*> m_spanningTree;
-  std::vector<const Edge*> m_frings;
+  std::vector<const Edge*> m_fringe;
 
   void Search(const int source){
 
-    IndexdPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
+    IndexedPriorityQLow<double> pq(m_costToThisNode, m_graph.GetNumNodes());
     pq.insert(source);
 
     while(!pq.empty()){
       int best = pq.pop();
-      m_spanningTree[best] = m_frings[best];
-      graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, best);
-      for(const Edge *E = ConstEdgeItr.begin();
-	  !ConstEdgeItr.end();
-	  e=ConstEdgeItr.next()){
-	double priority = e->GetCost();
-	if(m_frings[e->GetDst()] == 0){
-	  m_costToThisNode[e->GetDst()] = priority;
-	  pq.insert(e->GetDst());
-	  m_frings[e->GetDst()] = e;
-	}
-	else if((priority < m_costToThisNode[e->GetDst()]) && (m_spanningTree[e->GetDst()] == 0)){
-	  m_costToThisNode[e->GetDst()] = priority;
-	  pq.ChangePriority(e->GetDst());
-	  m_frings[e->GetDst()] = e;
-	}
+      m_spanningTree[best] = m_fringe[best];
+
+      graph_type::ConstEdgeIterator ConstEdgeItr(m_graph, best);	  
+	  for(const Edge *e = ConstEdgeItr.begin();
+		  !ConstEdgeItr.end();
+		  e=ConstEdgeItr.next()){
+			  double priority = e->GetCost();
+			  if(m_fringe[e->GetDst()] == 0){
+				  m_costToThisNode[e->GetDst()] = priority;
+				  pq.insert(e->GetDst());
+				  m_fringe[e->GetDst()] = e;
+			  }
+			  else if((priority < m_costToThisNode[e->GetDst()]) && 
+				  (m_spanningTree[e->GetDst()] == 0)){
+					  m_costToThisNode[e->GetDst()] = priority;
+					  pq.ChangePriority(e->GetDst());
+					  m_fringe[e->GetDst()] = e;
+			  }
       }
     }
   }
@@ -479,14 +485,14 @@ class Graph_MinSpanningTree{
  Graph_MinSpanningTree(graph_type &graph, int source = -1):
   m_graph(graph),
     m_spanningTree(graph.GetNumNodes()),
-    m_frings(graph.GetNumNodes()),
+    m_fringe(graph.GetNumNodes()),
     m_costToThisNode(graph.GetNumNodes(), -1){
 
     if(source < 0){
       for(int i = 0; i < graph.GetNumNodes(); ++i){
-	if(m_spanningTree[i] == 0){
-	  Search(i);
-	}
+		  if(m_spanningTree[i] == 0){
+			  Search(i);
+		  }
       }
     }
     else{
