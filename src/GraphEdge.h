@@ -66,7 +66,7 @@ class NavGraphEdge : public GraphEdge{
     NORMAL = 0,
     SWIM = 1 << 0,
     CRAWL = 1 << 1,
-    CREEP = 1 << 3,
+    CREEP = 1 << 2,
     JUMP = 1 << 3,
     FLY = 1 << 4,
     GRAPPLE = 1 << 5,
